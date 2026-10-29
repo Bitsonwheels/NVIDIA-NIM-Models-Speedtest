@@ -16,11 +16,17 @@ NVIDIA_API_KEY=your_key_here
 ## Run
 
 ```bash
-# Fresh run
+# Fresh run (restart from scratch)
 python benchmark.py --restart
 
-# Resume after interruption
-python benchmark.py --resume
+# Refresh model list from build.nvidia.com (fetches all 109 NIM models, filters by endpoint)
+python benchmark.py --refresh
+
+# Only test models matching a regex (e.g. embeddings)
+python benchmark.py --modelgrep emb
+
+# Resume after interruption (default — uses results.json)
+python benchmark.py
 ```
 
 Results are saved to `results.json` after every model — safe to interrupt and resume.
@@ -41,3 +47,7 @@ python -m http.server 8080
 | `models.json` | List of models to test |
 | `results.json` | Output — generated after running |
 | `visualize.html` | Animated bar chart |
+
+## Changelog
+
+- v2.0 (2026-10-29): `--refresh` (fetched 109 NIM models from build.nvidia.com), `--modelgrep` regex filter, `--restart`, `results.json` resume, `ranking`/`embeddings` tests added, `visualize.html` bar-chart rebuilt.
