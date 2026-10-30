@@ -28,6 +28,8 @@
   th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border)}
   th{font-weight:700;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:0.5px}
   td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  th.center{text-align:center}
+  th.right,td.right{text-align:right}
   .label{font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:320px}
   .label .id{display:block;font-weight:400;color:var(--muted);font-size:12px;margin-top:2px}
   .tag{display:inline-block;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;background:rgba(118,185,0,0.15);color:var(--green)}
@@ -90,17 +92,17 @@
 
   <section id="chat">
     <h2>Chat <span class="tag">chat</span> — tokens / s (higher = better)</h2>
-    <table id="t-chat"><thead><tr><th>Model</th><th class="bar-cell">tok/s (bar)</th><th>tok/s</th><th>Tokens</th><th>ttft (s)</th><th>Total (s)</th></tr></thead><tbody></tbody></table>
+    <table id="t-chat"><thead><tr><th>Model</th><th class="bar-cell center">tok/s (bar)</th><th class="center">tok/s</th><th class="center">Tokens</th><th class="center">ttft (s)</th><th class="center">Total (s)</th></tr></thead><tbody></tbody></table>
   </section>
 
   <section id="embeddings">
     <h2>Embeddings <span class="tag emb">embeddings</span> — Time (lower = better)</h2>
-    <table id="t-emb"><thead><tr><th>Model</th><th>Time (s)</th><th>Dimension</th></tr></thead><tbody></tbody></table>
+    <table id="t-emb"><thead><tr><th>Model</th><th class="right">Time (s)</th><th class="right">Dimension</th></tr></thead><tbody></tbody></table>
   </section>
 
   <section id="skipped">
     <h2>Skipped / Errors <span class="tag skip">skipped</span> / <span class="tag err">error</span></h2>
-    <table id="t-skip"><thead><tr><th>Model</th><th>Task</th><th>Reason</th></tr></thead><tbody></tbody></table>
+    <table id="t-skip"><thead><tr><th>Model</th><th class="right">Task</th><th class="right">Reason</th></tr></thead><tbody></tbody></table>
   </section>
 
   <section id="ai-rating">
@@ -170,8 +172,8 @@ async function load() {
     const reason = r.error ? r.error.replace(/^.*?\:\s*/, '').substring(0, 120) : '—';
     tSkip.insertAdjacentHTML('beforeend', `<tr>
       <td class="label">${r.label}<span class="id">${r.id}</span></td>
-      <td>${tag} ${r.task || '—'}</td>
-      <td style="font-size:12px;color:var(--muted)">${reason}</td>
+      <td class="right">${tag} ${r.task || '—'}</td>
+      <td class="right" style="font-size:12px;color:var(--muted)">${reason}</td>
     </tr>`);
   });
   if (!skip.length) tSkip.insertAdjacentHTML('beforeend', '<tr><td colspan="3" style="color:var(--muted)">No errors or skipped models</td></tr>');
