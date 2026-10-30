@@ -39,7 +39,7 @@ CACHE = os.path.join(BASE, os.getenv("CACHE") or "mdcache")  # caches downloaded
 KEY = os.getenv("NVIDIA_API_KEY", "")
 
 PROMPT = os.getenv("PROMPT") or "What is the capital of India? Please answer in one sentence."
-REQUEST_TIMEOUT = int(os.getenv("REQUEST_TIMEOUT") or 120)  # per request; free-tier cold starts measured at 88s
+REQUEST_TIMEOUT = int(os.getenv("REQUEST_TIMEOUT") or 300)  # per request; free-tier cold starts measured at 88s
 CHAT_PAUSE = int(os.getenv("CHAT_PAUSE") or 12)   # pause after chat (rate limit on free tier)
 OTHER_PAUSE = int(os.getenv("OTHER_PAUSE") or 3)  # pause after embeddings/ranking
 RETRY_BACKOFF = int(os.getenv("RETRY_BACKOFF") or 30)
