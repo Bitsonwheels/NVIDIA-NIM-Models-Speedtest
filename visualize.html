@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>NVIDIA NIM — Benchmark Ergebnisse</title>
+<title>NVIDIA NIM — Benchmark Results</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
   :root{
@@ -32,15 +32,37 @@
   .label .id{display:block;font-weight:400;color:var(--muted);font-size:12px;margin-top:2px}
   .tag{display:inline-block;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;background:rgba(118,185,0,0.15);color:var(--green)}
   .tag.emb{background:rgba(0,212,255,0.1);color:var(--cyan)}
-  .tag.rank{background:rgba(255,180,0,0.15);color:#ffb400}
   .tag.skip{background:rgba(255,215,0,0.18);color:#ffd700}
   .tag.err{background:rgba(248,113,113,0.08);color:var(--red)}
   .ok{color:var(--green)}.err{color:var(--red)}.skip{color:#ffd700}
-  /* Bar-Animation für Chat-Leistung */
+  /* Bar animation for chat throughput */
   .bar-wrap{background:rgba(255,255,255,0.05);border-radius:4px;height:10px;width:100%;overflow:hidden}
   .bar-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--cyan));border-radius:4px;animation:barGrow 1s ease-out forwards;transform-origin:left;transform:scaleX(0)}
   @keyframes barGrow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
   .bar-cell{width:140px}
+  /* Menu */
+  nav{position:sticky;top:0;z-index:10;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;
+      margin:-24px 0 32px;padding:12px 0;background:rgba(5,6,15,.9);backdrop-filter:blur(10px);
+      border-bottom:1px solid var(--border)}
+  nav a{color:var(--muted);text-decoration:none;font-size:11px;font-weight:700;text-transform:uppercase;
+        letter-spacing:1px;padding:8px 14px;border-radius:8px;border:1px solid var(--border)}
+  nav a:hover{color:var(--text);border-color:var(--green)}
+  nav a.ai{background:linear-gradient(135deg,var(--green),var(--cyan));color:#041018;border-color:transparent}
+  /* AI-Ranking */
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+  .tab{font:inherit;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;
+       padding:8px 16px;border-radius:8px;cursor:pointer;color:var(--muted);
+       background:var(--surface);border:1px solid var(--border)}
+  .tab[aria-pressed="true"]{color:var(--green);border-color:var(--green);background:rgba(118,185,0,.15)}
+  .podium{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+  .place{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+  .place.p1{border-color:var(--green)}
+  .place .rank{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+  .place.p1 .rank{color:var(--green)}
+  .place .model{font-weight:700;font-size:15px;margin:8px 0 2px}
+  .place .id{font-size:11px;color:var(--muted);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;word-break:break-all}
+  .place .reason{font-size:13px;margin-top:12px;opacity:.85}
+  .meta{font-size:12px;color:var(--muted);margin-top:16px}
   footer{margin-top:40px;text-align:center;font-size:12px;color:var(--muted)}
   footer span{color:var(--green);font-weight:600}
 </style>
@@ -50,33 +72,42 @@
   <header>
     <div class="badge">NVIDIA NIM</div>
     <h1>LLM Speed Benchmark</h1>
-    <p class="subtitle">Ergebnisse nach Task · <span>chat: tok/s ↑ · embeddings / ranking: Zeit ↓</span></p>
+    <p class="subtitle">Results by task · <span>chat: tok/s ↑ · embeddings: time ↓</span></p>
   </header>
 
+  <nav>
+    <a href="#chat">Chat</a>
+    <a href="#embeddings">Embeddings</a>
+    <a href="#skipped">Skipped</a>
+    <a class="ai" href="#ai-rating">AI-Ranking</a>
+  </nav>
+
   <div class="cards" id="summary-cards">
-    <div class="card"><div class="card-val" id="c-tested">—</div><div class="card-label">Getestet</div></div>
+    <div class="card"><div class="card-val" id="c-tested">—</div><div class="card-label">Tested</div></div>
     <div class="card"><div class="card-val" id="c-ok">—</div><div class="card-label">OK</div></div>
-    <div class="card"><div class="card-val" id="c-err">—</div><div class="card-label">Fehler</div></div>
+    <div class="card"><div class="card-val" id="c-err">—</div><div class="card-label">Errors</div></div>
   </div>
 
   <section id="chat">
-    <h2>Chat <span class="tag">chat</span> — tokens / s (höher = besser)</h2>
-    <table id="t-chat"><thead><tr><th>Modell</th><th class="bar-cell">tok/s (Bar)</th><th>tok/s</th><th>Tokens</th><th>ttft (s)</th><th>Gesamt (s)</th></tr></thead><tbody></tbody></table>
+    <h2>Chat <span class="tag">chat</span> — tokens / s (higher = better)</h2>
+    <table id="t-chat"><thead><tr><th>Model</th><th class="bar-cell">tok/s (bar)</th><th>tok/s</th><th>Tokens</th><th>ttft (s)</th><th>Total (s)</th></tr></thead><tbody></tbody></table>
   </section>
 
   <section id="embeddings">
-    <h2>Embeddings <span class="tag emb">embeddings</span> — Zeit (niedriger = besser)</h2>
-    <table id="t-emb"><thead><tr><th>Modell</th><th>Zeit (s)</th><th>Dimension</th></tr></thead><tbody></tbody></table>
-  </section>
-
-  <section id="ranking">
-    <h2>Ranking <span class="tag rank">ranking</span> — Zeit (niedriger = besser)</h2>
-    <table id="t-rank"><thead><tr><th>Modell</th><th>Zeit (s)</th></tr></thead><tbody></tbody></table>
+    <h2>Embeddings <span class="tag emb">embeddings</span> — Time (lower = better)</h2>
+    <table id="t-emb"><thead><tr><th>Model</th><th>Time (s)</th><th>Dimension</th></tr></thead><tbody></tbody></table>
   </section>
 
   <section id="skipped">
-    <h2>Übersprungen / Fehler <span class="tag skip">skipped</span> / <span class="tag err">error</span></h2>
-    <table id="t-skip"><thead><tr><th>Modell</th><th>Task</th><th>Grund</th></tr></thead><tbody></tbody></table>
+    <h2>Skipped / Errors <span class="tag skip">skipped</span> / <span class="tag err">error</span></h2>
+    <table id="t-skip"><thead><tr><th>Model</th><th>Task</th><th>Reason</th></tr></thead><tbody></tbody></table>
+  </section>
+
+  <section id="ai-rating">
+    <h2>AI-Ranking <span class="tag">AI Jury</span> — Top 3 per category</h2>
+    <div class="tabs" id="ai-tabs"></div>
+    <div class="podium" id="ai-podium"></div>
+    <p class="meta" id="ai-meta"></p>
   </section>
 
   <footer>
@@ -89,10 +120,10 @@ async function load() {
   let data;
   try {
     const res = await fetch('results.json');
-    if (!res.ok) throw new Error('results.json nicht gefunden');
+    if (!res.ok) throw new Error('results.json not found');
     data = await res.json();
   } catch (e) {
-    document.body.insertAdjacentHTML('afterbegin', `<div style="padding:40px;text-align:center;color:#f87171;font-family:Inter,sans-serif">⚠ ${e.message}<br>Führe zuerst <code>python benchmark.py</code> aus und öffne diese Datei danach.</div>`);
+    document.body.insertAdjacentHTML('afterbegin', `<div style="padding:40px;text-align:center;color:#f87171;font-family:Inter,sans-serif">⚠ ${e.message}<br>Run <code>python benchmark.py</code> first, then open this page.</div>`);
     return;
   }
 
@@ -117,7 +148,7 @@ async function load() {
       <td class="num">${r.total_time_s.toFixed(1)}</td>
     </tr>`);
   });
-  if (!chats.length) tChat.insertAdjacentHTML('beforeend', '<tr><td colspan="5" style="color:var(--muted)">Noch keine Chat-Ergebnisse</td></tr>');
+  if (!chats.length) tChat.insertAdjacentHTML('beforeend', '<tr><td colspan="5" style="color:var(--muted)">No chat results yet</td></tr>');
 
   // Embeddings: sort total_time_s asc
   const emb = ok.filter(d => d.task === 'embeddings').sort((a,b) => a.total_time_s - b.total_time_s);
@@ -129,18 +160,7 @@ async function load() {
       <td class="num">${r.dim != null ? r.dim : '—'}</td>
     </tr>`);
   });
-  if (!emb.length) tEmb.insertAdjacentHTML('beforeend', '<tr><td colspan="3" style="color:var(--muted)">Noch keine Embedding-Ergebnisse</td></tr>');
-
-  // Ranking: sort total_time_s asc
-  const rank = ok.filter(d => d.task === 'ranking').sort((a,b) => a.total_time_s - b.total_time_s);
-  const tRank = document.getElementById('t-rank').querySelector('tbody');
-  rank.forEach(r => {
-    tRank.insertAdjacentHTML('beforeend', `<tr>
-      <td class="label">${r.label}<span class="id">${r.id}</span></td>
-      <td class="num">${r.total_time_s.toFixed(2)}</td>
-    </tr>`);
-  });
-  if (!rank.length) tRank.insertAdjacentHTML('beforeend', '<tr><td colspan="2" style="color:var(--muted)">Noch keine Ranking-Ergebnisse</td></tr>');
+  if (!emb.length) tEmb.insertAdjacentHTML('beforeend', '<tr><td colspan="3" style="color:var(--muted)">No embedding results yet</td></tr>');
 
   // Skipped / errors
   const skip = data.filter(d => d.status === 'skipped' || d.status === 'error');
@@ -154,9 +174,48 @@ async function load() {
       <td style="font-size:12px;color:var(--muted)">${reason}</td>
     </tr>`);
   });
-  if (!skip.length) tSkip.insertAdjacentHTML('beforeend', '<tr><td colspan="3" style="color:var(--muted)">Noch keine Fehler / Übersprungen</td></tr>');
+  if (!skip.length) tSkip.insertAdjacentHTML('beforeend', '<tr><td colspan="3" style="color:var(--muted)">No errors or skipped models</td></tr>');
+}
+function esc(s){const m={'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};return String(s ?? '').replace(/[&<>"']/g, c => m[c]);}
+
+async function loadRatings() {
+  const tabs = document.getElementById('ai-tabs');
+  const podium = document.getElementById('ai-podium');
+  const meta = document.getElementById('ai-meta');
+  let data;
+  try {
+    const res = await fetch('ai_ratings.json');
+    if (!res.ok) throw new Error('not found');
+    data = await res.json();
+  } catch {
+    podium.innerHTML = `<div class="place"><div class="rank">No rating yet</div>
+      <div class="reason">Run <code>python benchmark.py</code> (or <code>python ai_rating.py</code>)
+      to generate the AI rating.</div></div>`;
+    return;
+  }
+  const cats = data.categories || {};
+  const keys = Object.keys(cats);
+  if (!keys.length) { podium.innerHTML = '<div class="place"><div class="rank">No categories</div></div>'; return; }
+  const show = (key) => {
+    const cat = cats[key];
+    tabs.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.cat === key)));
+    const top = cat.top3 || [];
+    podium.innerHTML = top.length
+      ? top.map((t, i) => `<div class="place p${t.rank || i + 1}">
+          <div class="rank">Place ${t.rank || i + 1}</div>
+          <div class="model">${esc(t.label)}</div>
+          <div class="id">${esc(t.model)}</div>
+          <div class="reason">${esc(t.reason)}</div>
+        </div>`).join('')
+      : `<div class="place"><div class="rank">No result</div><div class="reason">${esc(cat.error || '—')}</div></div>`;
+    meta.textContent = `${(cat.candidates || []).length} candidates · Source: ${data.source || 'NVIDIA API'} · ${data.generated_at || ''}`;
+  };
+  tabs.innerHTML = keys.map(k => `<button class="tab" data-cat="${esc(k)}" aria-pressed="false">${esc(cats[k].label || k)}</button>`).join('');
+  tabs.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => show(b.dataset.cat)));
+  show(keys[0]);
 }
 load();
+loadRatings();
 </script>
 </body>
 </html>

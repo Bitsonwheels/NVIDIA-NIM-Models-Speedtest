@@ -1,2 +1,7 @@
 .env
 Testing-NIM/
+*_TODO.md
+.planning/
+__pycache__/
+ai_rating_prompts.json
+mdcache

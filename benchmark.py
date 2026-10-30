@@ -29,20 +29,24 @@ if os.path.exists(env_path):
                 k, v = line.strip().split("=", 1)
                 os.environ.setdefault(k, v.strip())
 
-BUILD = "https://build.nvidia.com"
-API = "https://integrate.api.nvidia.com/v1"
-MODELS_FILE = os.path.join(BASE, "models.json")
-RESULTS_FILE = os.path.join(BASE, "results.json")
-CACHE = os.path.join(BASE, "mdcache")  # caches downloaded .md pages
+# Configuration lives in .env (template: .env.example); values below are fallbacks.
+# Relative paths are resolved against the project directory.
+BUILD = os.getenv("BUILD") or "https://build.nvidia.com"
+API = os.getenv("API") or "https://integrate.api.nvidia.com/v1"
+MODELS_FILE = os.path.join(BASE, os.getenv("MODELS_FILE") or "models.json")
+RESULTS_FILE = os.path.join(BASE, os.getenv("RESULTS_FILE") or "results.json")
+CACHE = os.path.join(BASE, os.getenv("CACHE") or "mdcache")  # caches downloaded .md pages
 KEY = os.getenv("NVIDIA_API_KEY", "")
 
-PROMPT = "What is the capital of India? Please answer in one sentence."
-REQUEST_TIMEOUT = 30  # max 30s per call; retry once with 60s backoff => max ~90s total
-CHAT_PAUSE = 12        # pause after chat (rate limit on free tier)
-OTHER_PAUSE = 3        # pause after embeddings/ranking
-RETRY_BACKOFF = 30  # max total ~60s (30 timeout + 30 backoff + 30 retry)
+PROMPT = os.getenv("PROMPT") or "What is the capital of India? Please answer in one sentence."
+REQUEST_TIMEOUT = int(os.getenv("REQUEST_TIMEOUT") or 120)  # per request; free-tier cold starts measured at 88s
+CHAT_PAUSE = int(os.getenv("CHAT_PAUSE") or 12)   # pause after chat (rate limit on free tier)
+OTHER_PAUSE = int(os.getenv("OTHER_PAUSE") or 3)  # pause after embeddings/ranking
+RETRY_BACKOFF = int(os.getenv("RETRY_BACKOFF") or 30)
 
-client = OpenAI(base_url=API, api_key=KEY, timeout=REQUEST_TIMEOUT, max_retries=2)
+# max_retries=0: attempt() does one controlled retry (backoff + full timeout),
+# so a hanging model costs 2x REQUEST_TIMEOUT instead of 6x.
+client = OpenAI(base_url=API, api_key=KEY, timeout=REQUEST_TIMEOUT, max_retries=0)
 GRN = "\033[92m"; RED = "\033[91m"; YLW = "\033[93m"; RST = "\033[0m"
 
 # ----------------------------------------------------------------------
@@ -288,8 +292,13 @@ def run_ranking(mid):
         headers={"Authorization": f"Bearer {KEY}", "Content-Type": "application/json", "Accept": "application/json"},
         method="POST",
     )
-    with urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT) as resp:
-        data = json_mod.loads(resp.read().decode("utf-8"))
+    try:
+        with urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT) as resp:
+            data = json_mod.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            return {"status": "skipped", "error": "ranking endpoint not available on free tier (404)"}
+        raise
     elapsed = time.perf_counter() - start
     # Extract scores (list of floats) from common shapes
     scores = []
@@ -352,11 +361,20 @@ def dispatch(model):
 # ----------------------------------------------------------------------
 #  Main CLI flow
 # ----------------------------------------------------------------------
+def print_server_hint():
+    """Tell the user how to open the web UI."""
+    print("\nStart the web UI:")
+    print("  python -m http.server 8000")
+    print("  -> http://localhost:8000/visualize.html")
+
+
 def main():
     parser = argparse.ArgumentParser(description="NVIDIA NIM benchmark (chat/embeddings/ranking)")
     parser.add_argument("--refresh", action="store_true", help="re‑fetch model list from build.nvidia.com")
     parser.add_argument("--modelgrep", metavar="REGEX", help="only test models whose id/label/desc match this regex")
     parser.add_argument("--restart", action="store_true", help="delete results.json first")
+    parser.add_argument("--no-ai-rating", action="store_true", help="skip the AI rating at the end")
+    parser.add_argument("--judge", help="judge model for the AI rating (default: AI_JUDGE_MODEL or meta/muse-glimmer-30b)")
     args = parser.parse_args()
 
     if args.refresh:
@@ -388,6 +406,11 @@ def main():
         results = json.load(open(RESULTS_FILE, encoding="utf-8"))
     else:
         results = []
+    # Resume logic: retry models that previously failed — timeouts/429s are transient,
+    # not a verdict on the model. Old failed entries are dropped, the new result replaces them.
+    failed = {r["id"] for r in results if r.get("status") in ("error", "empty")}
+    if failed:
+        results = [r for r in results if r["id"] not in failed]
     done_ids = {r["id"] for r in results}
     print(f"\n{len(models)} models scheduled — {len(done_ids)} already in {RESULTS_FILE} (resume)\n")
 
@@ -440,6 +463,18 @@ def main():
         for r in rank_ok[:10]:
             scores = r.get("scores", [])
             print(f"  {r['total_time_s']:7.3f}s  scores={scores[:3]}  {r['id']}")
+
+    # ---- AI rating (judge model via the same NVIDIA API) ----
+    if not args.no_ai_rating:
+        print("\n=== AI rating (top 3 per category) ===")
+        try:
+            import ai_rating
+            ai_rating.rate(results, judge=args.judge)
+        except Exception as e:
+            print(f"{YLW}AI rating skipped: {type(e).__name__}: {str(e)[:160]}{RST}")
+            print("  Run separately:  python ai_rating.py --judge <model>")
+
+    print_server_hint()
 
 
 if __name__ == "__main__":

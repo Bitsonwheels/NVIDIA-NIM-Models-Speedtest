@@ -1,0 +1,118 @@
+{
+  "generated_at": "2026-10-30T19:03:31",
+  "source": "NVIDIA API (meta/muse-glimmer-30b)",
+  "categories": {
+    "coding": {
+      "label": "Coding",
+      "candidates": [
+        {
+          "id": "google/diffusiongemma-26b-a4b-it",
+          "label": "diffusiongemma-26b-a4b-it"
+        },
+        {
+          "id": "google/gemma-4-31b-it",
+          "label": "gemma-4-31b-it"
+        },
+        {
+          "id": "meta/llama-guard-4-12b",
+          "label": "llama-guard-4-12b"
+        },
+        {
+          "id": "meta/muse-glimmer-30b",
+          "label": "muse-glimmer-30b"
+        },
+        {
+          "id": "minimaxai/minimax-m3.1-flash",
+          "label": "minimax-m3.1-flash"
+        },
+        {
+          "id": "nvidia/ising-calibration-1.5-31b",
+          "label": "ising-calibration-1.5-31b"
+        },
+        {
+          "id": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning",
+          "label": "nemotron-3-nano-omni-30b-a3b-reasoning"
+        },
+        {
+          "id": "nvidia/nemotron-3-ultra-550b-a55b",
+          "label": "nemotron-3-ultra-550b-a55b"
+        },
+        {
+          "id": "nvidia/nemotron-3.5-bolt-e4b",
+          "label": "Nemotron 3.5 Bolt E4B"
+        },
+        {
+          "id": "nvidia/nemotron-3.5-lightning-30b-a3b",
+          "label": "nemotron-3.5-lightning-30b-a3b"
+        },
+        {
+          "id": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+          "label": "nemotron-3.5-super-vl-120b-a12b"
+        },
+        {
+          "id": "nvidia/riva-translate-4b-instruct-v2",
+          "label": "riva-translate-4b-instruct-v2"
+        },
+        {
+          "id": "openai/gpt-oss-20b",
+          "label": "gpt-oss-20b"
+        },
+        {
+          "id": "poolside/laguna-xs-2.1",
+          "label": "laguna-xs-2.1"
+        }
+      ],
+      "top3": [
+        {
+          "rank": 1,
+          "model": "nvidia/nemotron-3-ultra-550b-a55b",
+          "label": "nemotron-3-ultra-550b-a55b",
+          "reason": "Largest Nemotron 3 Ultra MoE with strong general reasoning and code generation capabilities. Best raw coding quality among the listed models."
+        },
+        {
+          "rank": 2,
+          "model": "poolside/laguna-xs-2.1",
+          "label": "laguna-xs-2.1",
+          "reason": "Poolside Laguna is purpose-built for software engineering tasks. High practical usefulness for coding despite small size."
+        },
+        {
+          "rank": 3,
+          "model": "openai/gpt-oss-20b",
+          "label": "gpt-oss-20b",
+          "reason": "OpenAI open source model with strong coding and agentic reasoning performance. Well rounded for practical coding use."
+        }
+      ],
+      "raw": "{\"ranking\": [{\"rank\": 1, \"model\": \"nvidia/nemotron-3-ultra-550b-a55b\", \"reason\": \"Largest Nemotron 3 Ultra MoE with strong general reasoning and code generation capabilities. Best raw coding quality among the listed models.\"}, {\"rank\": 2, \"model\": \"poolside/laguna-xs-2.1\", \"reason\": \"Poolside Laguna is purpose-built for software engineering tasks. High practical usefulness for coding despite small size.\"}, {\"rank\": 3, \"model\": \"openai/gpt-oss-20b\", \"reason\": \"OpenAI open source model with strong coding and agentic reasoning performance. Well rounded for practical coding use.\"}]}",
+      "error": ""
+    },
+    "embedding": {
+      "label": "Embedding",
+      "candidates": [
+        {
+          "id": "nvidia/llama-nemotron-embed-vl-1b-v2",
+          "label": "llama-nemotron-embed-vl-1b-v2"
+        },
+        {
+          "id": "nvidia/nemotron-3-embed-1b",
+          "label": "nemotron-3-embed-1b"
+        }
+      ],
+      "top3": [
+        {
+          "rank": 1,
+          "model": "nvidia/llama-nemotron-embed-vl-1b-v2",
+          "label": "llama-nemotron-embed-vl-1b-v2",
+          "reason": "Vision-language embedding with v2 improvements offers broader modality coverage and newer Llama-Nemotron training. This makes it more practically useful and generally capable than a text-only predecessor."
+        },
+        {
+          "rank": 2,
+          "model": "nvidia/nemotron-3-embed-1b",
+          "label": "nemotron-3-embed-1b",
+          "reason": "Solid 1B text embedding from the Nemotron-3 family with strong efficiency for pure text retrieval and similarity. It is limited to unimodal text and is an older generation than the Llama-Nemotron VL variant."
+        }
+      ],
+      "raw": "{\"ranking\": [{\"rank\": 1, \"model\": \"nvidia/llama-nemotron-embed-vl-1b-v2\", \"reason\": \"Vision-language embedding with v2 improvements offers broader modality coverage and newer Llama-Nemotron training. This makes it more practically useful and generally capable than a text-only predecessor.\"}, {\"rank\": 2, \"model\": \"nvidia/nemotron-3-embed-1b\", \"reason\": \"Solid 1B text embedding from the Nemotron-3 family with strong efficiency for pure text retrieval and similarity. It is limited to unimodal text and is an older generation than the Llama-Nemotron VL variant.\"}]}",
+      "error": ""
+    }
+  }
+}
