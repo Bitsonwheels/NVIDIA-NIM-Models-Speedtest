@@ -1,13 +1,5 @@
 [
   {
-    "id": "deepseek-ai/deepseek-v4.1-flash",
-    "label": "deepseek-v4.1-flash",
-    "task": "chat",
-    "status": "error",
-    "error": "chat: Request timed out. / retry: Request timed out.",
-    "tokens_per_second": 0
-  },
-  {
     "id": "google/diffusiongemma-26b-a4b-it",
     "label": "diffusiongemma-26b-a4b-it",
     "task": "chat",
@@ -61,14 +53,6 @@
     "tokens_per_second": 0.08,
     "ttft_s": 103.043,
     "response_preview": "The capital of India is New Delhi."
-  },
-  {
-    "id": "mistralai/mistral-large-4-1t-a52b",
-    "label": "Mistral Large 4",
-    "task": "chat",
-    "status": "error",
-    "error": "chat: Request timed out. / retry: Request timed out.",
-    "tokens_per_second": 0
   },
   {
     "id": "mit/boltz2",
@@ -284,19 +268,44 @@
     "response_preview": "The capital of India is New Delhi."
   },
   {
-    "id": "stepfun-ai/step-5-preview",
-    "label": "Step 5 Preview",
-    "task": "chat",
-    "status": "error",
-    "error": "chat: Request timed out. / retry: Request timed out.",
-    "tokens_per_second": 0
-  },
-  {
     "id": "z-ai/glm-5-3-flash",
     "label": "glm-5-3-flash",
     "task": "chat",
     "status": "error",
     "error": "chat: Error code: 404",
     "tokens_per_second": 0
+  },
+  {
+    "id": "deepseek-ai/deepseek-v4.1-flash",
+    "label": "deepseek-v4.1-flash",
+    "task": "chat",
+    "status": "ok",
+    "total_time_s": 31.946,
+    "tokens": 3,
+    "tokens_per_second": 0.09,
+    "ttft_s": 31.38,
+    "response_preview": "The capital of India is New Delhi."
+  },
+  {
+    "id": "mistralai/mistral-large-4-1t-a52b",
+    "label": "Mistral Large 4",
+    "task": "chat",
+    "status": "ok",
+    "total_time_s": 1.508,
+    "tokens": 3,
+    "tokens_per_second": 1.99,
+    "ttft_s": 1.46,
+    "response_preview": "The capital of India is New Delhi."
+  },
+  {
+    "id": "stepfun-ai/step-5-preview",
+    "label": "Step 5 Preview",
+    "task": "chat",
+    "status": "ok",
+    "total_time_s": 1.718,
+    "tokens": 3,
+    "tokens_per_second": 1.75,
+    "ttft_s": 1.596,
+    "response_preview": "The capital of India is New Delhi."
   }
 ]

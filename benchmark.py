@@ -408,7 +408,9 @@ def main():
         results = []
     # Resume logic: retry models that previously failed — timeouts/429s are transient,
     # not a verdict on the model. Old failed entries are dropped, the new result replaces them.
-    failed = {r["id"] for r in results if r.get("status") in ("error", "empty")}
+    # Only models scheduled in this run are retried; failed entries of other models stay.
+    scheduled = {m["id"] for m in models}
+    failed = {r["id"] for r in results if r.get("status") in ("error", "empty") and r["id"] in scheduled}
     if failed:
         results = [r for r in results if r["id"] not in failed]
     done_ids = {r["id"] for r in results}
