@@ -131,19 +131,40 @@ def model_id_from_md(md_text, rel):
     return rel.replace(".md", "")
 
 
-def classify_task(md_text):
+def classify_task(md_text, model_id, callable_ids):
     """Determine the endpoint task based on code snippets inside the .md.
     Priority: ranking > embeddings > chat > other.
     Detection via plain text (curl, client.*, /v1/* URLs) – exact matches.
     """
     md_low = md_text.lower()
-    if "v1/ranking" in md_low or "client.post.*/ranking" in md_low:
+    if "embed" in model_id:
+        return "embeddings"
+    if "v1/ranking" in md_low or "ranking" in md_low or "rerank" in md_low or "client.post.*/ranking" in md_low or ".ranking" in md_low:
         return "ranking"
     if "v1/embeddings" in md_low or ".embeddings.create" in md_low:
         return "embeddings"
     if "v1/chat/completions" in md_low or ".chat.completions.create" in md_low:
         return "chat"
     return "other"
+
+
+def is_vision_only(md_text, title, desc):
+    """Vision-only models (e.g. nemotron-parse) reject plain-text prompts.
+    They cannot be benchmarked with a text prompt — mark as vision_only so dispatch skips them.
+    """
+    combined = (title + " " + desc + " " + md_text).lower()
+    vision_keywords = ["image", "vision", "document", "ocr", "parse", "visual", "vision-language", "vision language"]
+    text_keywords = ["text", "chat", "conversation", "dialogue", "llm"]
+    has_vision = any(k in combined for k in vision_keywords)
+    has_text = any(k in combined for k in text_keywords)
+    return has_vision and not has_text
+
+
+# Chat models that reject plain-text prompts (vision/document-only input)
+VISION_ONLY_CHAT_IDS = {
+    "nvidia/nemotron-parse",
+    "nvidia/nemotron-parse-2.0",
+}
 
 
 def refresh():
@@ -175,13 +196,15 @@ def refresh():
         except Exception:
             md = ""
         model_id = model_id_from_md(md, rel) if md else rel.replace(".md", "")
-        task = classify_task(md) if md else "other"
+        task = classify_task(md, model_id, callable_ids) if md else "other"
+        vision_only = is_vision_only(md, title, desc) if md else False
         out.append({
             "id": model_id,
             "label": title,
             "task": task,
             "desc": desc,
             "api_ok": model_id in callable_ids,
+            "vision_only": vision_only,
         })
         print(f"  [{i}/{total}] {model_id}  → {task}  callable={model_id in callable_ids}")
 
@@ -229,7 +252,16 @@ def run_chat(mid):
 
 def run_embeddings(mid):
     start = time.perf_counter()
-    r = client.embeddings.create(model=mid, input=[PROMPT])
+    try:
+        r = client.embeddings.create(model=mid, input=[PROMPT])
+    except Exception as e:
+        # Asymmetric models (e.g. llama-nemotron-embed-vl-1b-v2) require input_type
+        if "400" in str(e) or "input_type" in str(e):
+            r = client.embeddings.create(
+                model=mid, input=[PROMPT], extra_body={"input_type": "query"}
+            )
+        else:
+            raise
     elapsed = time.perf_counter() - start
     return {
         "status": "ok",
@@ -304,6 +336,9 @@ def dispatch(model):
     # Skip testing for "other" models (video/audio/pose etc.) – they are not OpenAI‑compatible.
     if task == "other":
         return {**base, "status": "skipped", "error": "no OpenAI‑compatible endpoint found"}
+    # Vision-only chat models (e.g. nemotron-parse) reject plain-text prompts
+    if mid in VISION_ONLY_CHAT_IDS:
+        return {**base, "status": "skipped", "error": "vision-only model — cannot benchmark with text prompt"}
 
     errors = []
     for kind in ORDER.get(task, ["chat", "embeddings", "ranking"]):

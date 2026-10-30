@@ -249,11 +249,16 @@ def run_ranking(mid):
         ],
     }
     start = time.perf_counter()
-    # Use client.post for generic API call (OpenAI SDK provides this for custom endpoints)
-    response = client.post("/ranking", body=body, timeout=REQUEST_TIMEOUT)
-    # The SDK returns an object similar to a request.Response; .json() extracts dict
+    import urllib.request, json as json_mod
+    req = urllib.request.Request(
+        f"{API}/ranking",
+        data=json_mod.dumps(body).encode("utf-8"),
+        headers={"Authorization": f"Bearer {KEY}", "Content-Type": "application/json", "Accept": "application/json"},
+        method="POST",
+    )
+    with urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT) as resp:
+        data = json_mod.loads(resp.read().decode("utf-8"))
     elapsed = time.perf_counter() - start
-    data = response.json()
     # Extract scores (list of floats) from common shapes
     scores = []
     if "results" in data and isinstance(data["results"], list):

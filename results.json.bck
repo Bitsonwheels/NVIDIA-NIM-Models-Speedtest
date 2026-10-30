@@ -1,0 +1,237 @@
+[
+  {
+    "id": "deepseek-ai/deepseek-v4.1-flash",
+    "label": "deepseek-v4.1-flash",
+    "task": "chat",
+    "status": "error",
+    "error": "chat: Request timed out. / retry: Request timed out.",
+    "tokens_per_second": 0
+  },
+  {
+    "id": "google/diffusiongemma-26b-a4b-it",
+    "label": "diffusiongemma-26b-a4b-it",
+    "task": "chat",
+    "status": "ok",
+    "total_time_s": 79.694,
+    "tokens": 1,
+    "tokens_per_second": 0.01,
+    "ttft_s": 79.693,
+    "response_preview": "The capital of India is New Delhi."
+  },
+  {
+    "id": "google/gemma-4-31b-it",
+    "label": "gemma-4-31b-it",
+    "task": "chat",
+    "status": "error",
+    "error": "chat: Request timed out. / retry: Request timed out.",
+    "tokens_per_second": 0
+  },
+  {
+    "id": "meta/llama-guard-4-12b",
+    "label": "llama-guard-4-12b",
+    "task": "chat",
+    "status": "ok",
+    "total_time_s": 0.322,
+    "tokens": 1,
+    "tokens_per_second": 3.1,
+    "ttft_s": 0.298,
+    "response_preview": "safe"
+  },
+  {
+    "id": "meta/muse-glimmer-30b",
+    "label": "muse-glimmer-30b",
+    "task": "chat",
+    "status": "ok",
+    "total_time_s": 5.155,
+    "tokens": 2,
+    "tokens_per_second": 0.39,
+    "ttft_s": 4.923,
+    "response_preview": "The capital of India is New Delhi."
+  },
+  {
+    "id": "minimaxai/minimax-m3.1-flash",
+    "label": "minimax-m3.1-flash",
+    "task": "chat",
+    "status": "ok",
+    "total_time_s": 2.435,
+    "tokens": 8,
+    "tokens_per_second": 3.29,
+    "ttft_s": 2.242,
+    "response_preview": "The capital of India is New Delhi."
+  },
+  {
+    "id": "mistralai/mistral-large-4-1t-a52b",
+    "label": "Mistral Large 4",
+    "task": "chat",
+    "status": "ok",
+    "total_time_s": 1.726,
+    "tokens": 2,
+    "tokens_per_second": 1.16,
+    "ttft_s": 1.634,
+    "response_preview": "The capital of India is New Delhi."
+  },
+  {
+    "id": "nvidia/ising-calibration-1.5-31b",
+    "label": "ising-calibration-1.5-31b",
+    "task": "chat",
+    "status": "ok",
+    "total_time_s": 15.917,
+    "tokens": 8,
+    "tokens_per_second": 0.5,
+    "ttft_s": 14.947,
+    "response_preview": "New Delhi is the capital of India."
+  },
+  {
+    "id": "nvidia/llama-nemotron-embed-vl-1b-v2",
+    "label": "llama-nemotron-embed-vl-1b-v2",
+    "task": "embeddings",
+    "status": "error",
+    "error": "embeddings: Error code: 400",
+    "tokens_per_second": 0
+  },
+  {
+    "id": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning",
+    "label": "nemotron-3-nano-omni-30b-a3b-reasoning",
+    "task": "chat",
+    "status": "ok",
+    "total_time_s": 0.623,
+    "tokens": 10,
+    "tokens_per_second": 16.05,
+    "ttft_s": 0.558,
+    "response_preview": "The capital of India is New Delhi."
+  },
+  {
+    "id": "nvidia/nemotron-3-ultra-550b-a55b",
+    "label": "nemotron-3-ultra-550b-a55b",
+    "task": "chat",
+    "status": "ok",
+    "total_time_s": 1.227,
+    "tokens": 3,
+    "tokens_per_second": 2.45,
+    "ttft_s": 1.164,
+    "response_preview": "The capital of India is New Delhi."
+  },
+  {
+    "id": "nvidia/nemotron-3.5-bolt-e4b",
+    "label": "Nemotron 3.5 Bolt E4B",
+    "task": "chat",
+    "status": "ok",
+    "total_time_s": 0.877,
+    "tokens": 8,
+    "tokens_per_second": 9.12,
+    "ttft_s": 0.704,
+    "response_preview": "The capital of India is New Delhi."
+  },
+  {
+    "id": "nvidia/nemotron-3.5-content-safety",
+    "label": "nemotron-3.5-content-safety",
+    "task": "chat",
+    "status": "ok",
+    "total_time_s": 0.422,
+    "tokens": 4,
+    "tokens_per_second": 9.48,
+    "ttft_s": 0.4,
+    "response_preview": "User Safety: safe"
+  },
+  {
+    "id": "nvidia/nemotron-3.5-lightning-30b-a3b",
+    "label": "nemotron-3.5-lightning-30b-a3b",
+    "task": "chat",
+    "status": "ok",
+    "total_time_s": 1.275,
+    "tokens": 8,
+    "tokens_per_second": 6.28,
+    "ttft_s": 1.233,
+    "response_preview": "The capital of India is New Delhi."
+  },
+  {
+    "id": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+    "label": "nemotron-3.5-super-vl-120b-a12b",
+    "task": "chat",
+    "status": "ok",
+    "total_time_s": 0.757,
+    "tokens": 3,
+    "tokens_per_second": 3.96,
+    "ttft_s": 0.699,
+    "response_preview": "The capital of India is New Delhi."
+  },
+  {
+    "id": "nvidia/nemotron-3_5-embed-1b",
+    "label": "nemotron-3.5-embed-1b",
+    "task": "embeddings",
+    "status": "error",
+    "error": "embeddings: Error code: 404",
+    "tokens_per_second": 0
+  },
+  {
+    "id": "nvidia/nemotron-3_5-embed-8b",
+    "label": "nemotron-3.5-embed-8b",
+    "task": "embeddings",
+    "status": "error",
+    "error": "embeddings: Error code: 404",
+    "tokens_per_second": 0
+  },
+  {
+    "id": "nvidia/nemotron-parse",
+    "label": "nemotron-parse",
+    "task": "chat",
+    "status": "error",
+    "error": "chat: Error code: 400 - Content cannot be a plain string. The model does not support text input. Content cannot be a plain string. The model does not support text inp",
+    "tokens_per_second": 0
+  },
+  {
+    "id": "nvidia/nemotron-parse-2.0",
+    "label": "nemotron-parse-2.0",
+    "task": "chat",
+    "status": "empty",
+    "total_time_s": 0.933,
+    "tokens": 0,
+    "tokens_per_second": 0,
+    "ttft_s": null,
+    "response_preview": ""
+  },
+  {
+    "id": "nvidia/riva-translate-4b-instruct-v2",
+    "label": "riva-translate-4b-instruct-v2",
+    "task": "chat",
+    "status": "ok",
+    "total_time_s": 1.078,
+    "tokens": 13,
+    "tokens_per_second": 12.06,
+    "ttft_s": 0.921,
+    "response_preview": "What is the capital of India? Please answer in one sentence."
+  },
+  {
+    "id": "openai/gpt-oss-20b",
+    "label": "gpt-oss-20b",
+    "task": "chat",
+    "status": "ok",
+    "total_time_s": 16.043,
+    "tokens": 8,
+    "tokens_per_second": 0.5,
+    "ttft_s": 15.868,
+    "response_preview": "The capital of India is New Delhi."
+  },
+  {
+    "id": "poolside/laguna-xs-2.1",
+    "label": "laguna-xs-2.1",
+    "task": "chat",
+    "status": "ok",
+    "total_time_s": 0.562,
+    "tokens": 8,
+    "tokens_per_second": 14.24,
+    "ttft_s": 0.473,
+    "response_preview": "The capital of India is New Delhi."
+  },
+  {
+    "id": "stepfun-ai/step-5-preview",
+    "label": "Step 5 Preview",
+    "task": "chat",
+    "status": "ok",
+    "total_time_s": 1.758,
+    "tokens": 3,
+    "tokens_per_second": 1.71,
+    "ttft_s": 1.597,
+    "response_preview": "The capital of India is New Delhi."
+  }
+]

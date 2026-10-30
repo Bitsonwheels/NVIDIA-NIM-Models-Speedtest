@@ -1,163 +1,874 @@
 [
   {
+    "id": "ansys/fluent",
+    "label": "fluent",
+    "task": "other",
+    "desc": "Run computational-fluid dynamics (CFD) simulations",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "arc/evo2-40b",
+    "label": "evo2-40b",
+    "task": "other",
+    "desc": "Evo 2 is a biological foundation model that is able to integrate information over long genomic sequences while retaining sensitivity to single-nucleotide changes.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "arc/evo2-40b-forward",
+    "label": "evo2-40b-forward",
+    "task": "other",
+    "desc": "Evo 2 is a biological foundation model that is able to integrate information over long genomic sequences while retaining sensitivity to single-nucleotide changes.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "arc/evo2-7b-forward",
+    "label": "evo2-7b-forward",
+    "task": "other",
+    "desc": "Evo 2 is a biological foundation model that is able to integrate information over long genomic sequences while retaining sensitivity to single-nucleotide changes.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "baidu/paddleocr",
+    "label": "paddleocr",
+    "task": "other",
+    "desc": "Model for table extraction that receives an image as input, runs OCR on the image, and returns the text within the image and its bounding boxes.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "black-forest-labs/flux-3-image-klein",
+    "label": "flux-3-image-klein",
+    "task": "other",
+    "desc": "FLUX 3 Image Klein is a state-of-the-art open-weight image generation and editing model",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "black-forest-labs/flux_1-dev",
+    "label": "FLUX.1-dev",
+    "task": "other",
+    "desc": "FLUX.1 is a state-of-the-art suite of image generation models",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "black-forest-labs/flux_1-kontext-dev",
+    "label": "FLUX.1-Kontext-dev",
+    "task": "other",
+    "desc": "FLUX.1 Kontext is a multimodal model that enables in-context image generation and editing.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "black-forest-labs/flux_1-schnell",
+    "label": "FLUX.1-schnell",
+    "task": "other",
+    "desc": "FLUX.1-schnell is a distilled image generation model, producing high quality images at fast speeds",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "black-forest-labs/flux_2-klein-4b",
+    "label": "flux.2-klein-4b",
+    "task": "other",
+    "desc": "FLUX.2-klein-4B is a distilled image generation and editing model, producing outputs at lighting speed",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "cadence/fidelity",
+    "label": "fidelity",
+    "task": "other",
+    "desc": "Run computational-fluid dynamics (CFD) simulations",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "cadence/spectre-x",
+    "label": "spectre-x",
+    "task": "other",
+    "desc": "Run large-scale electronics and chip design verification simulations",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "colabfold/msa-search",
+    "label": "msa-search",
+    "task": "other",
+    "desc": "Generates a multiple sequence alignment from a query sequence and a protein sequence database search.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
     "id": "deepseek-ai/deepseek-v4.1-flash",
     "label": "deepseek-v4.1-flash",
     "task": "chat",
     "desc": "552B MoE, 8B active params with native multimodal support and lower API cost using smaller KV cache",
-    "api_ok": true
+    "api_ok": true,
+    "vision_only": false
   },
   {
     "id": "google/diffusiongemma-26b-a4b-it",
     "label": "diffusiongemma-26b-a4b-it",
     "task": "chat",
     "desc": "Diffusion-based 26B parameter LLM enabling parallel token generation for real-time text apps",
-    "api_ok": true
+    "api_ok": true,
+    "vision_only": false
   },
   {
     "id": "google/gemma-4-31b-it",
     "label": "gemma-4-31b-it",
     "task": "chat",
     "desc": "Dense 31B model delivering frontier reasoning for coding, agentic workflows, and fine-tuning.",
-    "api_ok": true
+    "api_ok": true,
+    "vision_only": false
+  },
+  {
+    "id": "google/google-paligemma",
+    "label": "paligemma",
+    "task": "other",
+    "desc": "Vision language model adept at comprehending text and visual inputs to produce informative responses",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "ipd/proteinmpnn",
+    "label": "proteinmpnn",
+    "task": "other",
+    "desc": "ProteinMPNN is a deep learning model for predicting amino acid sequences for protein backbones.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "ipd/rfd4-proteina",
+    "label": "rfd4-proteina",
+    "task": "other",
+    "desc": "A unified generative model for protein, enzyme, binder and antibody design.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "ipd/rfdiffusion",
+    "label": "rfdiffusion",
+    "task": "other",
+    "desc": "A generative model of protein backbones for protein binder design.",
+    "api_ok": false,
+    "vision_only": false
   },
   {
     "id": "meta/llama-guard-4-12b",
     "label": "llama-guard-4-12b",
     "task": "chat",
     "desc": "Multi-modal model to classify safety for input prompts as well output responses.",
-    "api_ok": true
+    "api_ok": true,
+    "vision_only": false
   },
   {
     "id": "meta/muse-glimmer-30b",
     "label": "muse-glimmer-30b",
     "task": "chat",
     "desc": "Muse Glimmer 30B is a multimodal reasoning model accepting text and images, with native tool-calling and separate reasoning output.",
-    "api_ok": true
+    "api_ok": true,
+    "vision_only": false
+  },
+  {
+    "id": "microsoft/trellis",
+    "label": "TRELLIS",
+    "task": "other",
+    "desc": "MSFT TRELLIS is a 3D AI model that generates high-quality 3D assets from text or image inputs.",
+    "api_ok": false,
+    "vision_only": false
   },
   {
     "id": "minimaxai/minimax-m3.1-flash",
     "label": "minimax-m3.1-flash",
     "task": "chat",
     "desc": "MiniMax-M3.1-Flash is a native multimodal mixture-of-experts model for coding, agentic workflows, computer use, and cybersecurity.",
-    "api_ok": true
+    "api_ok": true,
+    "vision_only": false
   },
   {
     "id": "mistralai/mistral-large-4-1t-a52b",
     "label": "Mistral Large 4",
     "task": "chat",
     "desc": "Mistral Large 4 from Mistral AI, a 1T-total / 52B-active granular MoE for text and image input with reasoning, function calling and structured outputs, served in NVFP4 with DSpark speculative decoding.",
-    "api_ok": true
+    "api_ok": true,
+    "vision_only": false
+  },
+  {
+    "id": "mit/boltz2",
+    "label": "Boltz-2",
+    "task": "ranking",
+    "desc": "Predict complex structures using Boltz-2.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "mit/diffdock",
+    "label": "diffdock",
+    "task": "other",
+    "desc": "Predicts the 3D structure of how a molecule interacts with a protein.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/active-speaker-detection",
+    "label": "Active Speaker Detection",
+    "task": "other",
+    "desc": "Detect and track speaker identities across video frames.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/bevformer",
+    "label": "bevformer",
+    "task": "other",
+    "desc": "Advanced transformer for multi-frame bird's-eye-view 3D perception in autonomous driving.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/bnr",
+    "label": "Background Noise Removal",
+    "task": "other",
+    "desc": "Removes unwanted noises from audio improving speech intelligibility.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/body-pose",
+    "label": "3D Body Pose",
+    "task": "other",
+    "desc": "Estimate 3D human body pose and skeleton from video input.",
+    "api_ok": false,
+    "vision_only": true
+  },
+  {
+    "id": "nvidia/canary-1b-asr",
+    "label": "canary-1b-asr",
+    "task": "other",
+    "desc": "Multi-lingual model supporting speech-to-text recognition and translation.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/conformer-ctc-asr",
+    "label": "conformer-ctc-asr",
+    "task": "other",
+    "desc": "Automatic speech recognition model that transcribes speech in lower case Spanish with record-setting accuracy and performance",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/cosmos-transfer2_5-2b",
+    "label": "cosmos-transfer2.5-2b",
+    "task": "other",
+    "desc": "Generates physics-aware video world states for physical AI development using text prompts and multiple spatial control inputs derived from real-world data or simulation.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/cosmos3-nano",
+    "label": "cosmos3-nano",
+    "task": "other",
+    "desc": "Generates images, videos and action predictions from text, visual inputs and spatial controls, with mandatory input screening and visual SynthID watermarking.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/eyecontact",
+    "label": "eyecontact",
+    "task": "other",
+    "desc": "Estimate gaze angles of a person in a video and redirect to make it frontal.",
+    "api_ok": false,
+    "vision_only": true
+  },
+  {
+    "id": "nvidia/fourcastnet",
+    "label": "fourcastnet",
+    "task": "other",
+    "desc": "FourCastNet predicts global atmospheric dynamics of various weather / climate variables.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/genmol-generate",
+    "label": "genmol",
+    "task": "other",
+    "desc": "Fragment-Based Molecular Generation by Discrete Diffusion.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/ising-calibration-1-35b-a3b",
+    "label": "ising-calibration-1-35b-a3b",
+    "task": "chat",
+    "desc": "Open VLM for quantum computer calibration chart understanding across a range of qubit modalities.",
+    "api_ok": false,
+    "vision_only": false
   },
   {
     "id": "nvidia/ising-calibration-1.5-31b",
     "label": "ising-calibration-1.5-31b",
     "task": "chat",
     "desc": "NVIDIA-Ising-Calibration-1.5 is a dense multimodal vision-language model built on Gemma 4 31B. It analyzes quantum computing calibration experiment plots and generates structured technical text.",
-    "api_ok": true
+    "api_ok": true,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/kumo-relational",
+    "label": "Kumo Relational",
+    "task": "ranking",
+    "desc": "A relational foundation model for prediction over structured, multi-table data.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/kumo-tabular",
+    "label": "Kumo Tabular",
+    "task": "other",
+    "desc": "A tabular in-context learning model for classification and regression over structured tables.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/lipsync",
+    "label": "LipSync",
+    "task": "other",
+    "desc": "Generative lip dubbing that syncs lips in a video to input audio.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/llama-3_1-nemoguard-8b-content-safety",
+    "label": "llama-3.1-nemoguard-8b-content-safety",
+    "task": "chat",
+    "desc": "Leading content safety model for enhancing the safety and moderation capabilities of LLMs",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/llama-3_1-nemoguard-8b-topic-control",
+    "label": "llama-3.1-nemoguard-8b-topic-control",
+    "task": "chat",
+    "desc": "Topic control model to keep conversations focused on approved topics, avoiding inappropriate content.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/llama-3_1-nemotron-safety-guard-8b-v3",
+    "label": "llama-3.1-nemotron-safety-guard-8b-v3",
+    "task": "chat",
+    "desc": "Leading multilingual content safety model for enhancing the safety and moderation capabilities of LLMs",
+    "api_ok": false,
+    "vision_only": false
   },
   {
     "id": "nvidia/llama-nemotron-embed-vl-1b-v2",
     "label": "llama-nemotron-embed-vl-1b-v2",
     "task": "embeddings",
     "desc": "Multimodal question-answer retrieval representing user queries as text and documents as images.",
-    "api_ok": true
+    "api_ok": true,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/llama-nemotron-rerank-vl-1b-v2",
+    "label": "llama-nemotron-rerank-vl-1b-v2",
+    "task": "ranking",
+    "desc": "GPU-accelerated model optimized for providing a probability score that a given passage contains the information to answer a question.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/magpie-tts-multilingual",
+    "label": "magpie-tts-multilingual",
+    "task": "other",
+    "desc": "Natural and expressive voices in multiple languages. For voice agents and brand ambassadors.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/magpie-tts-zeroshot",
+    "label": "magpie-tts-zeroshot",
+    "task": "other",
+    "desc": "Expressive and engaging text-to-speech, generated from a short audio sample.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/megatron-1b-nmt",
+    "label": "megatron-1b-nmt",
+    "task": "other",
+    "desc": "Enable smooth global interactions in 36 languages.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/molmim-generate",
+    "label": "molmim",
+    "task": "other",
+    "desc": "MolMIM performs controlled generation, finding molecules with the right properties.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/nemoguard-jailbreak-detect",
+    "label": "nemoguard-jailbreak-detect",
+    "task": "other",
+    "desc": "Industry leading jailbreak classification model for protection from adversarial attempts",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/nemoretriever-ocr",
+    "label": "nemoretriever-ocr",
+    "task": "other",
+    "desc": "Powerful OCR model for fast, accurate real-world image text extraction, layout, and structure analysis.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/nemotron-3-embed-1b",
+    "label": "nemotron-3-embed-1b",
+    "task": "embeddings",
+    "desc": "1B embedding model for semantic search, retrieval, and RAG applications.",
+    "api_ok": true,
+    "vision_only": false
   },
   {
     "id": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning",
     "label": "nemotron-3-nano-omni-30b-a3b-reasoning",
     "task": "chat",
     "desc": "Nemotron 3 Nano Omni is an omni-modal reasoning model that understands images, video, speech, text.",
-    "api_ok": true
+    "api_ok": true,
+    "vision_only": false
   },
   {
     "id": "nvidia/nemotron-3-ultra-550b-a55b",
     "label": "nemotron-3-ultra-550b-a55b",
     "task": "chat",
     "desc": "Open, efficient hybrid Mamba-Transformer MoE with 1M context, excelling in agentic reasoning, coding, planning, tool calling, and more",
-    "api_ok": true
+    "api_ok": true,
+    "vision_only": false
   },
   {
     "id": "nvidia/nemotron-3.5-bolt-e4b",
     "label": "Nemotron 3.5 Bolt E4B",
     "task": "chat",
     "desc": "Compact text model for reasoning, tool calling, and agentic chat.",
-    "api_ok": true
+    "api_ok": true,
+    "vision_only": false
   },
   {
     "id": "nvidia/nemotron-3.5-content-safety",
     "label": "nemotron-3.5-content-safety",
     "task": "chat",
     "desc": "Multilingual, multimodal model for detecting unsafe and toxic content.",
-    "api_ok": true
+    "api_ok": true,
+    "vision_only": false
   },
   {
     "id": "nvidia/nemotron-3.5-lightning-30b-a3b",
     "label": "nemotron-3.5-lightning-30b-a3b",
     "task": "chat",
     "desc": "Fastest 30B A3B MoE model with leading domain accuracy for specialized agentic tasks",
-    "api_ok": true
+    "api_ok": true,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/nemotron-3.5-parse",
+    "label": "nemotron-3.5-parse",
+    "task": "other",
+    "desc": "Extract text, tables, and document layout from page images.",
+    "api_ok": false,
+    "vision_only": false
   },
   {
     "id": "nvidia/nemotron-3.5-super-vl-120b-a12b",
     "label": "nemotron-3.5-super-vl-120b-a12b",
     "task": "chat",
     "desc": "Nemotron 3.5 Super early-access reasoning model for agentic, coding, tool-calling, and multimodal workloads",
-    "api_ok": true
+    "api_ok": true,
+    "vision_only": false
   },
   {
     "id": "nvidia/nemotron-3_5-embed-1b",
     "label": "nemotron-3.5-embed-1b",
     "task": "embeddings",
     "desc": "1B multimodal embedding model for text and document-image retrieval in RAG applications.",
-    "api_ok": false
+    "api_ok": false,
+    "vision_only": false
   },
   {
     "id": "nvidia/nemotron-3_5-embed-8b",
     "label": "nemotron-3.5-embed-8b",
     "task": "embeddings",
     "desc": "8B multimodal embedding model for text and document-image retrieval in RAG applications.",
-    "api_ok": false
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/nemotron-3_5-rerank-8b",
+    "label": "nemotron-3.5-rerank-8b",
+    "task": "ranking",
+    "desc": "8B multimodal reranking model that scores how relevant a text or document-image passage is to a query.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/nemotron-asr-streaming",
+    "label": "nemotron-asr-streaming",
+    "task": "other",
+    "desc": "Real-time speech recognition for English",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/nemotron-graphic-elements-v1",
+    "label": "nemotron-graphic-elements-v1",
+    "task": "other",
+    "desc": "Model for object detection, fine-tuned to detect charts, tables, and titles in documents.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/nemotron-ocr-v1",
+    "label": "nemotron-ocr-v1",
+    "task": "other",
+    "desc": "Powerful OCR model for fast, accurate real-world image text extraction, layout, and structure analysis.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/nemotron-ocr-v2",
+    "label": "nemotron-ocr-v2",
+    "task": "other",
+    "desc": "Nemotron OCR v2 is a state-of-the-art multilingual text recognition model designed for robust end-to-end optical character recognition (OCR) on complex real-world images.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/nemotron-page-elements-v3",
+    "label": "nemotron-page-elements-v3",
+    "task": "other",
+    "desc": "Model for object detection, fine-tuned to detect charts, tables, and titles in documents.",
+    "api_ok": false,
+    "vision_only": false
   },
   {
     "id": "nvidia/nemotron-parse",
     "label": "nemotron-parse",
     "task": "chat",
     "desc": "Cutting-edge vision-language model exceling in retrieving text and metadata from images.",
-    "api_ok": true
+    "api_ok": true,
+    "vision_only": false
   },
   {
     "id": "nvidia/nemotron-parse-2.0",
     "label": "nemotron-parse-2.0",
     "task": "chat",
     "desc": "Cutting-edge vision-language model excelling in retrieving text and metadata from images.",
-    "api_ok": true
+    "api_ok": true,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/nemotron-table-structure-v1",
+    "label": "nemotron-table-structure-v1",
+    "task": "other",
+    "desc": "Model for object detection, fine-tuned to detect charts, tables, and titles in documents.",
+    "api_ok": false,
+    "vision_only": true
+  },
+  {
+    "id": "nvidia/nemotron-voicechat",
+    "label": "nemotron-voicechat",
+    "task": "other",
+    "desc": "Nemotron 3 Voicechat",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/nvidia-cuopt",
+    "label": "cuopt",
+    "task": "other",
+    "desc": "World-record accuracy and performance for complex route optimization.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/parakeet-1_1b-rnnt-multilingual-asr",
+    "label": "parakeet-1.1b-rnnt-multilingual-asr",
+    "task": "other",
+    "desc": "High accuracy and optimized performance for transcription in 25 languages",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/parakeet-ctc-0_6b-asr",
+    "label": "parakeet-ctc-0.6b-asr",
+    "task": "other",
+    "desc": "State-of-the-art accuracy and speed for English transcriptions.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/parakeet-ctc-0_6b-es",
+    "label": "parakeet-ctc-0.6b-es",
+    "task": "other",
+    "desc": "Accurate and optimized Spanish English transcriptions with punctuation and word timestamps.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/parakeet-ctc-0_6b-vi",
+    "label": "parakeet-ctc-0.6b-vi",
+    "task": "other",
+    "desc": "Accurate and optimized Vietnamese-English transcriptions with punctuation and word timestamps.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/parakeet-ctc-0_6b-zh-cn",
+    "label": "parakeet-ctc-0.6b-zh-cn",
+    "task": "other",
+    "desc": "Record-setting accuracy and performance for Mandarin English transcriptions.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/parakeet-ctc-0_6b-zh-tw",
+    "label": "parakeet-ctc-0.6b-zh-tw",
+    "task": "other",
+    "desc": "Record-setting accuracy and performance for Mandarin Taiwanese English transcriptions.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/parakeet-ctc-1_1b-asr",
+    "label": "parakeet-ctc-1.1b-asr",
+    "task": "other",
+    "desc": "Record-setting accuracy and performance for English transcription.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/parakeet-tdt-0_6b",
+    "label": "parakeet-tdt-0.6b",
+    "task": "other",
+    "desc": "Multilingual ASR across 25 European languages with punctuation, capitalization, and word timestamps",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/parakeet-tdt-0_6b-v2",
+    "label": "parakeet-tdt-0.6b-v2",
+    "task": "other",
+    "desc": "Accurate and optimized English transcriptions with punctuation and word timestamps",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/qwen-image-edit-nvpcb-ovsl2sl",
+    "label": "qwen-image-edit-nvpcb-ovsl2sl",
+    "task": "other",
+    "desc": "An image edit model specialized for Omniverse synthetic to photographic solder-light style captured at NVIDIA PCB inspection stations",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/relighting",
+    "label": "Relighting",
+    "task": "other",
+    "desc": "Re-illuminate people in video to match target lighting from a 360 HDRI environment map.",
+    "api_ok": false,
+    "vision_only": true
+  },
+  {
+    "id": "nvidia/riva-translate-1_6b",
+    "label": "riva-translate-1.6b",
+    "task": "other",
+    "desc": "Enable smooth global interactions in 36 languages.",
+    "api_ok": false,
+    "vision_only": false
   },
   {
     "id": "nvidia/riva-translate-4b-instruct-v2",
     "label": "riva-translate-4b-instruct-v2",
     "task": "chat",
     "desc": "Translation model in 37 languages with few-shots example prompts capability.",
-    "api_ok": true
+    "api_ok": true,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/sparsedrive",
+    "label": "sparsedrive",
+    "task": "other",
+    "desc": "End-to-end autonomous driving stack integrating perception, prediction, and planning with sparse scene representations for efficiency and safety.",
+    "api_ok": false,
+    "vision_only": true
+  },
+  {
+    "id": "nvidia/streampetr",
+    "label": "streampetr",
+    "task": "other",
+    "desc": "StreamPETR offers efficient 3D object detection for autonomous driving by propagating sparse object queries temporally.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/studiovoice",
+    "label": "Studio Voice",
+    "task": "other",
+    "desc": "Enhance input speech recorded with low-quality microphones in noisy or reverberant environments, producing studio-quality speech.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/synthetic-video-detector",
+    "label": "synthetic-video-detector",
+    "task": "other",
+    "desc": "NVIDIA Synthetic Video Detector is an AI-powered micro-service for detecting AI‑generated (synthetic) videos.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "nvidia/vsr",
+    "label": "Video Super Resolution NIM",
+    "task": "other",
+    "desc": "Upscale encoded or ST 2110 video to higher resolutions with NVIDIA Video Super Resolution.",
+    "api_ok": false,
+    "vision_only": true
   },
   {
     "id": "openai/gpt-oss-20b",
     "label": "gpt-oss-20b",
     "task": "chat",
     "desc": "Smaller Mixture of Experts (MoE) text-only LLM for efficient AI reasoning and math",
-    "api_ok": true
+    "api_ok": true,
+    "vision_only": false
+  },
+  {
+    "id": "openai/whisper-large-v3",
+    "label": "whisper-large-v3",
+    "task": "other",
+    "desc": "Robust Speech Recognition via Large-Scale Weak Supervision.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "openfold/openfold2",
+    "label": "openfold2",
+    "task": "other",
+    "desc": "Predicts the 3D structure of a protein from its amino acid sequence, multiple sequence alignments, and templates.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "openfold/openfold3",
+    "label": "openfold3",
+    "task": "other",
+    "desc": "OpenFold3 is a third-generation biomolecular foundation model that predicts the three-dimensional structures of molecular complexes (proteins, DNA, RNA, ligands)",
+    "api_ok": false,
+    "vision_only": false
   },
   {
     "id": "poolside/laguna-xs-2.1",
     "label": "laguna-xs-2.1",
     "task": "chat",
     "desc": "Efficient 33B MoE for local, long-horizon agentic coding and terminal tasks",
-    "api_ok": true
+    "api_ok": true,
+    "vision_only": false
+  },
+  {
+    "id": "qc69jvmznzxy/cosmos3-nano-reasoner",
+    "label": "cosmos3-nano-reasoner",
+    "task": "other",
+    "desc": "Vision language model that excels in understanding the physical world using structured reasoning on videos or images.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "qc69jvmznzxy/llama-3.2-11b-vision-instruct",
+    "label": "llama-3.2-11b-vision-instruct",
+    "task": "other",
+    "desc": "Cutting-edge vision-language model exceling in high-quality reasoning from images.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "qc69jvmznzxy/llama-3.2-90b-vision-instruct",
+    "label": "llama-3.2-90b-vision-instruct",
+    "task": "other",
+    "desc": "Cutting-edge vision-Language model exceling in high-quality reasoning from images.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "qwen/qwen-image",
+    "label": "qwen-image",
+    "task": "other",
+    "desc": "Qwen-Image is a text-to-image foundation model with advanced multilingual text rendering.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "qwen/qwen-image-edit",
+    "label": "qwen-image-edit",
+    "task": "other",
+    "desc": "Qwen-Image-Edit is an image editing model with multilingual text editing and strong subject consistency.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "resembleai/chatterbox-multilingual-tts",
+    "label": "chatterbox-multilingual-tts",
+    "task": "other",
+    "desc": "Natural and expressive voices in 23 languages. For voice agents and brand ambassadors.",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "siemens/star-ccm",
+    "label": "simcenter-star-ccm+",
+    "task": "other",
+    "desc": "Run computational-fluid dynamics (CFD) simulations",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "stabilityai/stable-diffusion-3_5-large",
+    "label": "stable-diffusion-3.5-large",
+    "task": "other",
+    "desc": "Stable Diffusion 3.5 is a popular text-to-image generation model",
+    "api_ok": false,
+    "vision_only": false
   },
   {
     "id": "stepfun-ai/step-5-preview",
     "label": "Step 5 Preview",
     "task": "chat",
     "desc": "Preview of StepFun's Step 5: ~600B-total / 27B-active multimodal MoE (text and image in, text out) with 1M context, reasoning and tool calling, served in NVFP4.",
-    "api_ok": true
+    "api_ok": true,
+    "vision_only": false
+  },
+  {
+    "id": "wan-ai/wan2.2-animate-2-14b",
+    "label": "wan2.2-animate-2-14b",
+    "task": "other",
+    "desc": "Wan2.2-Animate-2 is a novel end-to-end character animation framework",
+    "api_ok": false,
+    "vision_only": false
+  },
+  {
+    "id": "z-ai/glm-5-3-flash",
+    "label": "glm-5-3-flash",
+    "task": "chat",
+    "desc": "Multimodal 320B-total / 18B-active MoE with hybrid KDA and sparse MLA attention, native FP8 weights, reasoning and tool calling.",
+    "api_ok": false,
+    "vision_only": false
   }
 ]
