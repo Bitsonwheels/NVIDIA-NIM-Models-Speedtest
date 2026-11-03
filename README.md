@@ -92,8 +92,41 @@ python -m http.server 8000
 | `ai_ratings.json` | AI rating — generated after running |
 | `visualize.html` | Animated bar chart |
 
+## History (run snapshots + comparison)
+
+Every benchmark run appends a snapshot to `results_history.json` — the same results list plus
+metadata (timestamp, prompt, model counts, duration). Old runs are pruned automatically
+(retention: `HISTORY_RETENTION_DAYS`, hard cap: `MAX_HISTORY_RUNS`).
+
+```bash
+# List recent runs
+python benchmark.py --history
+
+# Compare two runs by id
+python benchmark.py --history-compare <RUN_A> <RUN_B>
+
+# Manually prune by retention policy
+python benchmark.py --history-prune
+
+# Skip the snapshot for this run
+python benchmark.py --no-history
+```
+
+The web UI shows a **Compare** tab: pick two runs, see which models improved, regressed,
+appeared or disappeared — with the relevant metric per task (tok/s for chat, latency for
+embeddings / ranking). A 5 % relative change counts as "same"; everything else is
+classified as improved or regressed.
+
+| Env var | Default | Effect |
+|---|---|---|
+| `HISTORY_FILE` | `results_history.json` | Path to the history file |
+| `HISTORY_RETENTION_DAYS` | `30` | Prune runs older than this |
+| `MAX_HISTORY_RUNS` | `100` | Hard cap on number of runs kept |
+
 ## Changelog
 
+- v2.4.1 (2026-11-03): History UI polish — section headers (h2) now larger (16px) with red accent background/border; Run A/Run B dropdowns in Compare tab styled with colored borders (green/cyan), glow shadows, hover/focus states; history feature working with real data snapshots.
+- v2.4 (2026-11-03): History — every run appends a snapshot to `results_history.json` (metadata + full results); `--history`, `--history-compare A B`, `--history-prune` and `--no-history` added; retention via `HISTORY_RETENTION_DAYS` (30) and `MAX_HISTORY_RUNS` (100); web UI "Compare" tab with run selector and diff table (improved / regressed / same / added / removed). Comparison metric: tok/s for chat, latency for embeddings/ranking; 5 % relative change counts as stable.
 - v2.3 (2026-10-30): `REQUEST_TIMEOUT` raised to 300 s — the last three timing-out models (Deepseek V4.1 Flash, Mistral Large 4 1T, Step 5 Preview) now answer, the result set has 19 successful models and no timeouts; resume fix — only models scheduled in the current run are retried, so a filtered run no longer drops the results of other models; cleanup — legacy `.bck` backups and the orphaned worktree removed, the `mdcache/` markdown cache is no longer versioned; web UI table alignment (chat headers centered, embedding and skipped/error columns right-aligned).
 - v2.2 (2026-10-30): All configuration moved to `.env` (see the new `.env.example`); the Ranking section was removed from `visualize.html`; timeout fix — `REQUEST_TIMEOUT` 30 s → 120 s (free-tier cold starts need ~90 s), OpenAI client retries 2 → 0 (one controlled retry in `attempt()`), and failed models are retried on the next run instead of staying broken in `results.json`.
 - v2.1 (2026-10-30): AI-Rating — a judge model on the NVIDIA API (default `meta/muse-glimmer-30b`) ranks the reachable models into a top 3 per category (Coding, Embedding); new menu item "AI-Ranking" in `visualize.html`. Only models that were reachable and delivered tokens are rated, the judge never sees tok/s, latency or dimensions, invented or duplicate models are dropped. New options: `benchmark.py --no-ai-rating`, `benchmark.py --judge MODEL`, `ai_rating.py` with `--judge` / `--prepare` / `--selftest`, env `AI_JUDGE_MODEL`.

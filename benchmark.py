@@ -7,6 +7,10 @@ Usage:
   python benchmark.py --refresh           # re-fetch model list from build.nvidia.com
   python benchmark.py --modelgrep emb     # only test models whose id/label/desc match this regex
   python benchmark.py --restart           # delete results.json first
+  python benchmark.py --history           # list recent run snapshots
+  python benchmark.py --history-compare A B  # compare two runs by id
+  python benchmark.py --history-prune     # prune old runs by retention policy
+  python benchmark.py --no-history        # skip saving a run snapshot
 """
 import argparse
 import json
@@ -17,7 +21,12 @@ import time
 import urllib.request
 import urllib.error
 import warnings
+import uuid
+from datetime import datetime
 from openai import OpenAI
+
+# init the runtime measurement
+start = time.time()
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 # Load .env for NVIDIA_API_KEY
@@ -43,6 +52,11 @@ REQUEST_TIMEOUT = int(os.getenv("REQUEST_TIMEOUT") or 300)  # per request; free-
 CHAT_PAUSE = int(os.getenv("CHAT_PAUSE") or 12)   # pause after chat (rate limit on free tier)
 OTHER_PAUSE = int(os.getenv("OTHER_PAUSE") or 3)  # pause after embeddings/ranking
 RETRY_BACKOFF = int(os.getenv("RETRY_BACKOFF") or 30)
+
+# --- history (snapshots of past benchmark runs) ---
+HISTORY_FILE = os.path.join(BASE, os.getenv("HISTORY_FILE") or "results_history.json")
+HISTORY_RETENTION_DAYS = int(os.getenv("HISTORY_RETENTION_DAYS") or 30)
+MAX_HISTORY_RUNS = int(os.getenv("MAX_HISTORY_RUNS") or 100)
 
 # max_retries=0: attempt() does one controlled retry (backoff + full timeout),
 # so a hanging model costs 2x REQUEST_TIMEOUT instead of 6x.
@@ -359,8 +373,177 @@ def dispatch(model):
     return {**base, "status": "error", "error": "; ".join(errors)[:300], "tokens_per_second": 0}
 
 # ----------------------------------------------------------------------
+#  History: snapshots of past benchmark runs
+# ----------------------------------------------------------------------
+def load_history():
+    """Load results_history.json; return {"runs": [...]} or empty structure."""
+    if not os.path.exists(HISTORY_FILE):
+        return {"runs": []}
+    try:
+        with open(HISTORY_FILE, encoding="utf-8") as f:
+            data = json.load(f)
+        if not isinstance(data, dict) or not isinstance(data.get("runs"), list):
+            return {"runs": []}
+        return data
+    except (json.JSONDecodeError, OSError):
+        return {"runs": []}
+
+
+def save_history(data):
+    """Write history dict to disk (atomic via temp file)."""
+    tmp = HISTORY_FILE + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+    os.replace(tmp, HISTORY_FILE)
+
+
+def prune_history(runs):
+    """Drop runs older than HISTORY_RETENTION_DAYS and cap at MAX_HISTORY_RUNS."""
+    cutoff = time.time() - HISTORY_RETENTION_DAYS * 86400
+    kept = [r for r in runs if r.get("_ts", 0) >= cutoff]
+    kept.sort(key=lambda r: r.get("_ts", 0), reverse=True)
+    return kept[:MAX_HISTORY_RUNS]
+
+
+def snapshot_results(results, duration_s):
+    """Build a run snapshot from the current results list + metadata."""
+    ok = [r for r in results if r.get("status") == "ok"]
+    err = [r for r in results if r.get("status") not in ("ok", "skipped")]
+    skipped = [r for r in results if r.get("status") == "skipped"]
+    return {
+        "run_id": uuid.uuid4().hex[:8],
+        "_ts": time.time(),
+        "timestamp": datetime.now().isoformat(timespec="seconds"),
+        "prompt": PROMPT,
+        "total_models": len(results),
+        "ok_count": len(ok),
+        "error_count": len(err),
+        "skipped_count": len(skipped),
+        "duration_s": round(duration_s, 1),
+        "source": "benchmark.py",
+        "results": results,
+    }
+
+
+def append_history(results, duration_s):
+    """Snapshot the current run into results_history.json and prune old runs."""
+    data = load_history()
+    runs = data.get("runs", [])
+    runs.append(snapshot_results(results, duration_s))
+    runs = prune_history(runs)
+    data["runs"] = runs
+    save_history(data)
+    return data
+
+
+# ----------------------------------------------------------------------
 #  Main CLI flow
 # ----------------------------------------------------------------------
+def cmd_history_list():
+    """Print a summary of recent history runs."""
+    data = load_history()
+    runs = data.get("runs", [])
+    if not runs:
+        print("No history runs yet — run 'python benchmark.py' first.")
+        return
+    runs.sort(key=lambda r: r.get("_ts", 0), reverse=True)
+    print(f"\n=== History ({len(runs)} runs, retention {HISTORY_RETENTION_DAYS}d) ===\n")
+    print(f"{'run_id':<10} {'timestamp':<20} {'models':>6} {'ok':>4} {'err':>4} {'skip':>5} {'duration':>8}")
+    for r in runs:
+        print(f"{r['run_id']:<10} {r['timestamp']:<20} {r['total_models']:>6} "
+              f"{r['ok_count']:>4} {r['error_count']:>4} {r['skipped_count']:>5} {r['duration_s']:>7.1f}s")
+    print("\nCompare:  python benchmark.py --history-compare <RUN_A> <RUN_B>")
+
+
+def cmd_history_compare(run_a, run_b):
+    """Diff two history runs by run_id."""
+    data = load_history()
+    runs = {r["run_id"]: r for r in data.get("runs", [])}
+    missing = [rid for rid in (run_a, run_b) if rid not in runs]
+    if missing:
+        sys.exit(f"run(s) not found: {', '.join(missing)}\n"
+                 f"Available: {', '.join(sorted(runs)) or '(none)'}")
+    a, b = runs[run_a], runs[run_b]
+    print(f"\n=== Compare {a['timestamp']}  vs  {b['timestamp']} ===\n")
+    print(f"{'':<10} {'A':>8} {'B':>8}")
+    print(f"{'models':<10} {a['total_models']:>8} {b['total_models']:>8}")
+    print(f"{'ok':<10} {a['ok_count']:>8} {b['ok_count']:>8}")
+    print(f"{'errors':<10} {a['error_count']:>8} {b['error_count']:>8}")
+    print(f"{'skipped':<10} {a['skipped_count']:>8} {b['skipped_count']:>8}")
+
+    by_id_a = {r["id"]: r for r in a["results"]}
+    by_id_b = {r["id"]: r for r in b["results"]}
+    all_ids = sorted(set(by_id_a) | set(by_id_b))
+
+    rows = []
+    for mid in all_ids:
+        ra, rb = by_id_a.get(mid), by_id_b.get(mid)
+        if ra and rb:
+            rows.append((mid, ra, rb, _diff(ra, rb)))
+        elif ra:
+            rows.append((mid, ra, None, "removed"))
+        else:
+            rows.append((mid, None, rb, "added"))
+
+    changed = [r for r in rows if r[3] not in ("same", "removed", "added")]
+    same = [r for r in rows if r[3] == "same"]
+    added = [r for r in rows if r[3] == "added"]
+    removed = [r for r in rows if r[3] == "removed"]
+
+    if changed:
+        print(f"\n--- Changed ({len(changed)}) ---")
+        print(f"{'model':<48} {'metric_A':>10} {'metric_B':>10} {'Δ':>10}  verdict")
+        for mid, ra, rb, verdict in changed:
+            ma, mb = _metric(ra), _metric(rb)
+            delta = mb - ma
+            sign = "↑" if delta > 0 else "↓"
+            print(f"{mid:<48} {ma:>10.3f} {mb:>10.3f} {delta:>+10.3f}  {sign} {verdict}")
+    if added:
+        print(f"\n--- Added in B ({len(added)}) ---")
+        for mid, _, rb, _ in added:
+            print(f"  + {mid:<46} {_metric(rb):.3f}")
+    if removed:
+        print(f"\n--- Removed in B ({len(removed)}) ---")
+        for mid, ra, _, _ in removed:
+            print(f"  - {mid:<46} {_metric(ra):.3f}")
+    if not changed and not added and not removed:
+        print("\nBoth runs are identical.")
+
+
+def _metric(result):
+    """Return the comparable metric for a result (None if not ok)."""
+    if not result or result.get("status") != "ok":
+        return None
+    task = result.get("task")
+    if task == "chat":
+        return result.get("tokens_per_second", 0)
+    return result.get("total_time_s", 0)
+
+
+def _diff(ra, rb):
+    """Classify the change between two ok results for the same model."""
+    ma, mb = _metric(ra), _metric(rb)
+    if ma is None or mb is None:
+        return "same"
+    task = ra.get("task")
+    # Threshold: 5 % relative change counts as a real change
+    if abs(mb - ma) <= max(abs(ma) * 0.05, 0.01):
+        return "same"
+    if task == "chat":
+        return "improved" if mb > ma else "regressed"   # higher tok/s = better
+    return "improved" if mb < ma else "regressed"        # lower latency = better
+
+
+def cmd_history_prune():
+    """Manually prune history by retention policy."""
+    data = load_history()
+    before = len(data.get("runs", []))
+    data["runs"] = prune_history(data.get("runs", []))
+    save_history(data)
+    after = len(data["runs"])
+    print(f"Pruned {before - after} runs (retention {HISTORY_RETENTION_DAYS}d, cap {MAX_HISTORY_RUNS}).")
+
+
 def print_server_hint():
     """Tell the user how to open the web UI."""
     print("\nStart the web UI:")
@@ -375,7 +558,19 @@ def main():
     parser.add_argument("--restart", action="store_true", help="delete results.json first")
     parser.add_argument("--no-ai-rating", action="store_true", help="skip the AI rating at the end")
     parser.add_argument("--judge", help="judge model for the AI rating (default: AI_JUDGE_MODEL or meta/muse-glimmer-30b)")
+    parser.add_argument("--no-history", action="store_true", help="skip saving a run snapshot to history")
+    parser.add_argument("--history", action="store_true", help="list recent history runs and exit")
+    parser.add_argument("--history-compare", nargs=2, metavar=("RUN_A", "RUN_B"), help="compare two history runs by id and exit")
+    parser.add_argument("--history-prune", action="store_true", help="prune history by retention policy and exit")
     args = parser.parse_args()
+
+    # History-only modes (no benchmark run)
+    if args.history:
+        return cmd_history_list()
+    if args.history_compare:
+        return cmd_history_compare(args.history_compare[0], args.history_compare[1])
+    if args.history_prune:
+        return cmd_history_prune()
 
     if args.refresh:
         refresh()
@@ -476,8 +671,21 @@ def main():
             print(f"{YLW}AI rating skipped: {type(e).__name__}: {str(e)[:160]}{RST}")
             print("  Run separately:  python ai_rating.py --judge <model>")
 
+    # ---- snapshot into history ----
+    if not args.no_history:
+        try:
+            append_history(results, time.time() - start)
+            print(f"\n✓ run snapshot saved to {HISTORY_FILE}")
+        except Exception as e:
+            print(f"{YLW}history snapshot failed: {type(e).__name__}: {str(e)[:160]}{RST}")
+
     print_server_hint()
 
-
+    # --- End of the measurement, then  print
+    end = time.time()
+    res = end - start
+    final_res = res / 60
+    print('Execution time:', final_res, 'minutes')
+    
 if __name__ == "__main__":
     main()

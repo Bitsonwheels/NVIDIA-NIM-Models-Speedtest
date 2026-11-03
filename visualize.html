@@ -23,7 +23,7 @@
   .card-val{font-size:32px;font-weight:700;color:var(--green);line-height:1;margin-bottom:6px}
   .card-label{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
   section{margin-bottom:40px}
-  h2{font-size:13px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:8px}
+  h2{font-size:16px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text);margin-bottom:16px;padding:12px 20px;background:rgba(248,113,113,0.15);border:1px solid var(--red);border-radius:8px;display:inline-block}
   table{width:100%;border-collapse:collapse;font-size:14px}
   th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border)}
   th{font-weight:700;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:0.5px}
@@ -50,6 +50,10 @@
         letter-spacing:1px;padding:8px 14px;border-radius:8px;border:1px solid var(--border)}
   nav a:hover{color:var(--text);border-color:var(--green)}
   nav a.ai{background:linear-gradient(135deg,var(--green),var(--cyan));color:#041018;border-color:transparent}
+  
+  /* Compare dropdowns */
+  #cmp-a:hover, #cmp-b:hover{border-color:var(--text);background:rgba(255,255,255,0.08)}
+  #cmp-a:focus, #cmp-b:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(118,185,0,0.2)}
   /* AI-Ranking */
   .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
   .tab{font:inherit;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;
@@ -81,6 +85,7 @@
     <a href="#chat">Chat</a>
     <a href="#embeddings">Embeddings</a>
     <a href="#skipped">Skipped</a>
+    <a href="#compare">Compare</a>
     <a class="ai" href="#ai-rating">AI-Ranking</a>
   </nav>
 
@@ -110,6 +115,19 @@
     <div class="tabs" id="ai-tabs"></div>
     <div class="podium" id="ai-podium"></div>
     <p class="meta" id="ai-meta"></p>
+  </section>
+
+  <section id="compare">
+    <h2>Compare Runs <span class="tag">history</span> — diff between two benchmark runs</h2>
+    <div style="margin-bottom:20px;display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+      <label style="font-size:12px;color:var(--muted);font-weight:600">Run A</label>
+      <select id="cmp-a" style="background:var(--surface);color:var(--text);border:2px solid var(--green);border-radius:8px;padding:10px 14px;font:inherit;min-width:240px;font-weight:500;box-shadow:0 0 0 1px rgba(118,185,0,0.3)"></select>
+      <label style="font-size:12px;color:var(--muted);font-weight:600">Run B</label>
+      <select id="cmp-b" style="background:var(--surface);color:var(--text);border:2px solid var(--cyan);border-radius:8px;padding:10px 14px;font:inherit;min-width:240px;font-weight:500;box-shadow:0 0 0 1px rgba(0,212,255,0.3)"></select>
+      <button id="cmp-btn" style="background:linear-gradient(135deg,var(--green),var(--cyan));color:#041018;border:none;border-radius:8px;padding:10px 24px;font-weight:700;font-size:13px;cursor:pointer">Compare</button>
+    </div>
+    <div id="cmp-summary" style="margin-bottom:16px"></div>
+    <table id="cmp-table"><thead><tr><th>Model</th><th class="right">A</th><th class="right">B</th><th class="right">Δ</th><th>Verdict</th></tr></thead><tbody></tbody></table>
   </section>
 
   <footer>
@@ -216,8 +234,125 @@ async function loadRatings() {
   tabs.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => show(b.dataset.cat)));
   show(keys[0]);
 }
+
+// ---- Compare runs (results_history.json) ----
+async function loadCompare() {
+  const selA = document.getElementById('cmp-a');
+  const selB = document.getElementById('cmp-b');
+  const btn = document.getElementById('cmp-btn');
+  const summary = document.getElementById('cmp-summary');
+  const table = document.getElementById('cmp-table').querySelector('tbody');
+
+  let runs = [];
+  try {
+    const res = await fetch('results_history.json');
+    if (!res.ok) throw new Error('not found');
+    const data = await res.json();
+    runs = (data.runs || []).slice().sort((a, b) => (b._ts || 0) - (a._ts || 0));
+  } catch {
+    summary.innerHTML = '<div class="place"><div class="rank">No history</div>' +
+      '<div class="reason">Run <code>python benchmark.py</code> to generate a run snapshot.</div></div>';
+    return;
+  }
+  if (!runs.length) {
+    summary.innerHTML = '<div class="place"><div class="rank">No history</div>' +
+      '<div class="reason">Run <code>python benchmark.py</code> to generate a run snapshot.</div></div>';
+    return;
+  }
+
+  const opts = runs.map(r => `<option value="${esc(r.run_id)}">${esc(r.run_id)} — ${esc(r.timestamp)} (${r.total_models} models)</option>`).join('');
+  selA.innerHTML = opts;
+  selB.innerHTML = opts;
+  if (runs.length > 1) selB.selectedIndex = 1;
+
+  const metric = (r) => {
+    if (!r || r.status !== 'ok') return null;
+    if (r.task === 'chat') return r.tokens_per_second;
+    return r.total_time_s;
+  };
+  const fmt = (v, task) => {
+    if (v === null || v === undefined) return '—';
+    if (task === 'chat') return v.toFixed(2);
+    return v.toFixed(3);
+  };
+
+  const doCompare = () => {
+    const a = runs.find(r => r.run_id === selA.value);
+    const b = runs.find(r => r.run_id === selB.value);
+    if (!a || !b) return;
+    const byA = Object.fromEntries(a.results.map(r => [r.id, r]));
+    const byB = Object.fromEntries(b.results.map(r => [r.id, r]));
+    const ids = [...new Set([...Object.keys(byA), ...Object.keys(byB)])].sort();
+
+    const rows = [];
+    for (const id of ids) {
+      const ra = byA[id], rb = byB[id];
+      if (ra && rb) {
+        const ma = metric(ra), mb = metric(rb);
+        if (ma === null || mb === null) continue;
+        const task = ra.task;
+        const rel = Math.abs(mb - ma) / Math.max(Math.abs(ma), 0.001);
+        let verdict = 'same';
+        if (rel > 0.05) {
+          if (task === 'chat') verdict = mb > ma ? 'improved' : 'regressed';
+          else verdict = mb < ma ? 'improved' : 'regressed';
+        }
+        rows.push({ id, ra, rb, ma, mb, task, delta: mb - ma, verdict });
+      } else if (ra) {
+        rows.push({ id, ra, rb: null, ma: metric(ra), mb: null, task: ra.task, delta: null, verdict: 'removed' });
+      } else if (rb) {
+        rows.push({ id, ra: null, rb, ma: null, mb: metric(rb), task: rb.task, delta: null, verdict: 'added' });
+      }
+    }
+
+    const changed = rows.filter(r => r.verdict === 'improved' || r.verdict === 'regressed');
+    const same = rows.filter(r => r.verdict === 'same');
+    const added = rows.filter(r => r.verdict === 'added');
+    const removed = rows.filter(r => r.verdict === 'removed');
+
+    summary.innerHTML = `
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px">
+        ${card('Run A', `${esc(a.timestamp)}<br>${a.total_models} models`, 'var(--text)', '13px')}
+        ${card('Run B', `${esc(b.timestamp)}<br>${b.total_models} models`, 'var(--text)', '13px')}
+        ${card('Changed', changed.length, 'var(--green)')}
+        ${card('Same', same.length)}
+        ${card('Added', added.length, 'var(--cyan)')}
+        ${card('Removed', removed.length, 'var(--red)')}
+      </div>`;
+
+    const sorted = [...changed.sort((x, y) => Math.abs(y.delta) - Math.abs(x.delta)), ...same, ...added, ...removed];
+    if (!sorted.length) {
+      table.innerHTML = '<tr><td colspan="5" style="color:var(--muted)">Both runs are identical.</td></tr>';
+      return;
+    }
+    table.innerHTML = sorted.map(r => {
+      const v = r.verdict;
+      const color = v === 'improved' ? 'var(--green)' : v === 'regressed' ? 'var(--red)' : v === 'added' ? 'var(--cyan)' : v === 'removed' ? 'var(--red)' : 'var(--muted)';
+      const sign = r.delta === null ? '' : (r.delta > 0 ? '+' : '');
+      const d = r.delta === null ? '—' : (r.task === 'chat' ? `${sign}${r.delta.toFixed(2)}` : `${sign}${r.delta.toFixed(3)}`);
+      return `<tr>
+        <td class="label">${esc(r.ra ? r.ra.label : (r.rb ? r.rb.label : r.id))}<span class="id">${esc(r.id)}</span></td>
+        <td class="num">${fmt(r.ma, r.task)}</td>
+        <td class="num">${fmt(r.mb, r.task)}</td>
+        <td class="num" style="color:${color}">${d}</td>
+        <td style="color:${color};font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:0.5px">${v}</td>
+      </tr>`;
+    }).join('');
+  };
+
+  btn.addEventListener('click', doCompare);
+  doCompare();
+}
+
+function card(label, value, color, size) {
+  const c = color || 'var(--text)';
+  const s = size ? `font-size:${size};line-height:1.5;` : '';
+  return `<div class="card"><div class="card-val" style="color:${c};${s}">${value}</div><div class="card-label">${label}</div></div>`;
+}
+
 load();
 loadRatings();
+loadCompare();
 </script>
 </body>
 </html>
