@@ -45,7 +45,7 @@ free-tier models can need ~90 s for their first token.
 
 ## AI-Ranking (Top 3 per category)
 
-At the end of a run, a judge model (default `meta/muse-glimmer-30b`, see `AI_JUDGE_MODEL`) picks the best 3 models per
+At the end of a run, a judge model (default `nvidia/nemotron-3-nano-omni-30b-a3b-reasoning`, see `AI_JUDGE_MODEL`) picks the best 3 models per
 category — **Coding** and **Embedding** — and writes `ai_ratings.json`.
 
 - Only models that were reachable **and** delivered output are rated (chat: `tokens > 0`, embeddings: `dim > 0`).
@@ -70,7 +70,7 @@ The judge runs on the same NVIDIA API key (`NVIDIA_API_KEY` in `.env`).
 | Option | Effect |
 |---|---|
 | `--no-ai-rating` | `benchmark.py` only — skip the AI rating at the end of the run |
-| `--judge MODEL` | Judge model for the rating, e.g. `nvidia/nemotron-3.5-bolt-e4b` (default `meta/muse-glimmer-30b`). With `benchmark.py` it only affects the rating step |
+| `--judge MODEL` | Judge model for the rating, e.g. `nvidia/nemotron-3.5-bolt-e4b` (default `nvidia/nemotron-3-nano-omni-30b-a3b-reasoning`). With `benchmark.py` it only affects the rating step |
 | `AI_JUDGE_MODEL` | Environment variable — same as `--judge`, for a permanent setting (e.g. in `.env`) |
 | `--prepare` | `ai_rating.py` only — write the prompts to `ai_rating_prompts.json` instead of calling the API, for manual answering |
 | `--selftest` | `ai_rating.py` only — offline self-check of filter, prompt and JSON parsing, no API calls |
@@ -128,7 +128,7 @@ classified as improved or regressed.
 
 ## Changelog
 
-- v2.4.2 (2026-11-06): Data update after two benchmark runs on 2026-11-04 (run ids `d96ed2ce`, `50b6d34d`) — `results.json` refreshed (33 models: 15 ok, 12 error, 6 skipped, 1 empty; newly failed: Deepseek V4.1 Flash (timeout) and Step 5 Preview (empty answer), newly successful: `ising-calibration-1.5-31b`); `ai_ratings.json` re-rated with judge `google/gemma-4-31b-it` — both categories came back without a usable answer ("no usable answer from the judge model"), so the top 3 from v2.4.1 (judge `minimaxai/minimax-m3.1-flash`) only survives in the git history and can be regenerated with `python ai_rating.py`; `results_history.json` (7 snapshots) is now versioned as well; web UI — models with status `empty` now show up in the error table (before they were only counted as errors); docs — `REQUEST_TIMEOUT` default in the README corrected (120 s → 300 s) and `results_history.json` added to the file table.
+- v2.4.2 (2026-11-06): Data update after two benchmark runs on 2026-11-04 (run ids `d96ed2ce`, `50b6d34d`) — `results.json` refreshed (33 models: 15 ok, 12 error, 6 skipped, 1 empty; newly failed: Deepseek V4.1 Flash (timeout) and Step 5 Preview (empty answer), newly successful: `ising-calibration-1.5-31b`); **judge model switched** to `nvidia/nemotron-3-nano-omni-30b-a3b-reasoning` in `.env`, `.env.example` and `ai_rating.py` — the previous candidates `meta/muse-glimmer-30b` (~0.15 tok/s, needs >4 min per answer, exceeds `JUDGE_TIMEOUT=180`) and `google/gemma-4-31b-it` (timeout) are unusable as judge on the free tier, the new one answers with valid JSON in ~19 s; `ai_ratings.json` re-rated successfully with it (Coding: 3 models, Embedding: 2 models) after the attempt with `google/gemma-4-31b-it` had come back without a usable answer; `results_history.json` (7 snapshots) is now versioned as well; web UI — models with status `empty` now show up in the error table (before they were only counted as errors); docs — `REQUEST_TIMEOUT` default in the README corrected (120 s → 300 s) and `results_history.json` added to the file table.
 - v2.4.1 (2026-11-03): History UI polish — section headers (h2) now larger (16px) with red accent background/border; Run A/Run B dropdowns in Compare tab styled with colored borders (green/cyan), glow shadows, hover/focus states; history feature working with real data snapshots.
 - v2.4 (2026-11-03): History — every run appends a snapshot to `results_history.json` (metadata + full results); `--history`, `--history-compare A B`, `--history-prune` and `--no-history` added; retention via `HISTORY_RETENTION_DAYS` (30) and `MAX_HISTORY_RUNS` (100); web UI "Compare" tab with run selector and diff table (improved / regressed / same / added / removed). Comparison metric: tok/s for chat, latency for embeddings/ranking; 5 % relative change counts as stable.
 - v2.4 (2026-11-03) — **Bugfix**: Fixed critical 404 regression caused by corrupted `.env` (broken API base URL `.../vMODELS_FILE=...` → restored `.../v1`); restored `results.json` (33 models, 19 OK) and `models.json` (109 models, 22 callable) from git; history snapshots now capture real benchmark data.

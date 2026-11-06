@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-04T16:23:28",
-  "source": "NVIDIA API (google/gemma-4-31b-it)",
+  "generated_at": "2026-11-06T02:07:37",
+  "source": "NVIDIA API (nvidia/nemotron-3-nano-omni-30b-a3b-reasoning)",
   "categories": {
     "coding": {
       "label": "Coding",
@@ -58,9 +58,28 @@
           "label": "laguna-xs-2.1"
         }
       ],
-      "top3": [],
-      "raw": "",
-      "error": "no usable answer from the judge model"
+      "top3": [
+        {
+          "rank": 1,
+          "model": "nvidia/nemotron-3-ultra-550b-a55b",
+          "label": "nemotron-3-ultra-550b-a55b",
+          "reason": "The 550‑billion‑parameter Nemotron‑3‑Ultra model has the largest capacity and extensive training on diverse codebases, giving it superior reasoning and generation quality for programming tasks."
+        },
+        {
+          "rank": 2,
+          "model": "mistralai/mistral-large-4-1t-a52b",
+          "label": "Mistral Large 4",
+          "reason": "Mistral Large 4‑1T, with 52 billion parameters and a decoder optimized for long‑context understanding, delivers high‑quality code with strong performance and reasonable resource demands."
+        },
+        {
+          "rank": 3,
+          "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+          "label": "nemotron-3.5-super-vl-120b-a12b",
+          "reason": "Nemotron‑3.5‑Super‑VL 120 B combines a massive parameter count with specialized training for code and reasoning, offering excellent coding capability while staying more manageable than the ultra‑large model."
+        }
+      ],
+      "raw": "{\n  \"ranking\": [\n    {\n      \"rank\": 1,\n      \"model\": \"nvidia/nemotron-3-ultra-550b-a55b\",\n      \"reason\": \"The 550‑billion‑parameter Nemotron‑3‑Ultra model has the largest capacity and extensive training on diverse codebases, giving it superior reasoning and generation quality for programming tasks.\"\n    },\n    {\n      \"rank\": 2,\n      \"model\": \"mistralai/mistral-large-4-1t-a52b\",\n      \"reason\": \"Mistral Large 4‑1T, with 52 billion parameters and a decoder optimized for long‑context understanding, delivers high‑quality code with strong performance and reasonable resource demands.\"\n    },\n    {\n      \"rank\": 3,\n      \"model\": \"nvidia/nemotron-3.5-super-vl-120b-a12b\",\n      \"reason\": \"Nemotron‑3.5‑Super‑VL 120 B combines a massive parameter count with specialized training for code and reasoning, offering excellent coding capability while staying more manageable than the ultra‑large model.\"\n    }\n  ]\n}",
+      "error": ""
     },
     "embedding": {
       "label": "Embedding",
@@ -74,9 +93,22 @@
           "label": "nemotron-3-embed-1b"
         }
       ],
-      "top3": [],
-      "raw": "",
-      "error": "no usable answer from the judge model"
+      "top3": [
+        {
+          "rank": 1,
+          "model": "nvidia/nemotron-3-embed-1b",
+          "label": "nemotron-3-embed-1b",
+          "reason": "It is a recent 1B‑parameter encoder trained on extensive text data, delivering high‑quality semantic embeddings with strong downstream performance."
+        },
+        {
+          "rank": 2,
+          "model": "nvidia/llama-nemotron-embed-vl-1b-v2",
+          "label": "llama-nemotron-embed-vl-1b-v2",
+          "reason": "While effective for multimodal contexts, its focus on vision‑language tasks makes it slightly less optimal for pure text embedding compared to Nemotron‑3."
+        }
+      ],
+      "raw": "{\n  \"ranking\": [\n    {\n      \"rank\": 1,\n      \"model\": \"nvidia/nemotron-3-embed-1b\",\n      \"reason\": \"It is a recent 1B‑parameter encoder trained on extensive text data, delivering high‑quality semantic embeddings with strong downstream performance.\"\n    },\n    {\n      \"rank\": 2,\n      \"model\": \"nvidia/llama-nemotron-embed-vl-1b-v2\",\n      \"reason\": \"While effective for multimodal contexts, its focus on vision‑language tasks makes it slightly less optimal for pure text embedding compared to Nemotron‑3.\"\n    }\n  ]\n}",
+      "error": ""
     }
   }
 }

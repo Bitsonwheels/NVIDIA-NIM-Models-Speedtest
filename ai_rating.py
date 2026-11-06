@@ -30,7 +30,7 @@ RESULTS_FILE = benchmark.RESULTS_FILE
 RATINGS_FILE = os.path.join(BASE, os.getenv("RATINGS_FILE") or "ai_ratings.json")
 PROMPTS_FILE = os.path.join(BASE, os.getenv("PROMPTS_FILE") or "ai_rating_prompts.json")
 
-JUDGE_MODEL = os.getenv("AI_JUDGE_MODEL") or "meta/muse-glimmer-30b"
+JUDGE_MODEL = os.getenv("AI_JUDGE_MODEL") or "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
 JUDGE_TIMEOUT = int(os.getenv("JUDGE_TIMEOUT") or 180)
 JUDGE_PAUSE = int(os.getenv("JUDGE_PAUSE") or 5)  # free-tier rate limit between judge calls
 
