@@ -40,7 +40,7 @@ python benchmark.py --judge openai/gpt-oss-20b
 Results are saved to `results.json` after every model — safe to interrupt and resume.
 
 Models that failed before (timeout, 429) are retried automatically on the next run — a failed attempt
-is not a verdict on the model. `REQUEST_TIMEOUT` (default 120 s) is the patience per request, because
+is not a verdict on the model. `REQUEST_TIMEOUT` (default 300 s) is the patience per request, because
 free-tier models can need ~90 s for their first token.
 
 ## AI-Ranking (Top 3 per category)
@@ -52,6 +52,8 @@ category — **Coding** and **Embedding** — and writes `ai_ratings.json`.
 - The judge only sees model ids and labels — never tok/s, latency or dimensions — so the ranking is
   independent of the measured values.
 - Models the judge invents or repeats are dropped — the rating contains only models from the benchmark.
+- If the judge fails or times out, the ranking stays empty and the reason is stored in `ai_ratings.json` —
+  re-run `python ai_rating.py` to retry (optionally with `--judge MODEL`).
 - Shown in `visualize.html` under the menu item **AI-Ranking** (category tabs).
 
 ```bash
@@ -90,6 +92,7 @@ python -m http.server 8000
 | `models.json` | List of models to test |
 | `results.json` | Output — generated after running |
 | `ai_ratings.json` | AI rating — generated after running |
+| `results_history.json` | Run snapshots (History / Compare tab) — generated after running |
 | `visualize.html` | Animated bar chart |
 
 ## History (run snapshots + comparison)
@@ -125,6 +128,7 @@ classified as improved or regressed.
 
 ## Changelog
 
+- v2.4.2 (2026-11-06): Data update after two benchmark runs on 2026-11-04 (run ids `d96ed2ce`, `50b6d34d`) — `results.json` refreshed (33 models: 15 ok, 12 error, 6 skipped, 1 empty; newly failed: Deepseek V4.1 Flash (timeout) and Step 5 Preview (empty answer), newly successful: `ising-calibration-1.5-31b`); `ai_ratings.json` re-rated with judge `google/gemma-4-31b-it` — both categories came back without a usable answer ("no usable answer from the judge model"), so the top 3 from v2.4.1 (judge `minimaxai/minimax-m3.1-flash`) only survives in the git history and can be regenerated with `python ai_rating.py`; `results_history.json` (7 snapshots) is now versioned as well; web UI — models with status `empty` now show up in the error table (before they were only counted as errors); docs — `REQUEST_TIMEOUT` default in the README corrected (120 s → 300 s) and `results_history.json` added to the file table.
 - v2.4.1 (2026-11-03): History UI polish — section headers (h2) now larger (16px) with red accent background/border; Run A/Run B dropdowns in Compare tab styled with colored borders (green/cyan), glow shadows, hover/focus states; history feature working with real data snapshots.
 - v2.4 (2026-11-03): History — every run appends a snapshot to `results_history.json` (metadata + full results); `--history`, `--history-compare A B`, `--history-prune` and `--no-history` added; retention via `HISTORY_RETENTION_DAYS` (30) and `MAX_HISTORY_RUNS` (100); web UI "Compare" tab with run selector and diff table (improved / regressed / same / added / removed). Comparison metric: tok/s for chat, latency for embeddings/ranking; 5 % relative change counts as stable.
 - v2.4 (2026-11-03) — **Bugfix**: Fixed critical 404 regression caused by corrupted `.env` (broken API base URL `.../vMODELS_FILE=...` → restored `.../v1`); restored `results.json` (33 models, 19 OK) and `models.json` (109 models, 22 callable) from git; history snapshots now capture real benchmark data.

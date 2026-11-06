@@ -1,14 +1,10 @@
 {
-  "generated_at": "2026-11-03T16:27:37",
-  "source": "NVIDIA API (minimaxai/minimax-m3.1-flash)",
+  "generated_at": "2026-11-04T16:23:28",
+  "source": "NVIDIA API (google/gemma-4-31b-it)",
   "categories": {
     "coding": {
       "label": "Coding",
       "candidates": [
-        {
-          "id": "deepseek-ai/deepseek-v4.1-flash",
-          "label": "deepseek-v4.1-flash"
-        },
         {
           "id": "google/diffusiongemma-26b-a4b-it",
           "label": "diffusiongemma-26b-a4b-it"
@@ -28,6 +24,10 @@
         {
           "id": "mistralai/mistral-large-4-1t-a52b",
           "label": "Mistral Large 4"
+        },
+        {
+          "id": "nvidia/ising-calibration-1.5-31b",
+          "label": "ising-calibration-1.5-31b"
         },
         {
           "id": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning",
@@ -56,34 +56,11 @@
         {
           "id": "poolside/laguna-xs-2.1",
           "label": "laguna-xs-2.1"
-        },
-        {
-          "id": "stepfun-ai/step-5-preview",
-          "label": "Step 5 Preview"
         }
       ],
-      "top3": [
-        {
-          "rank": 1,
-          "model": "nvidia/nemotron-3-ultra-550b-a55b",
-          "label": "nemotron-3-ultra-550b-a55b",
-          "reason": "Its very large mixture-of-experts capacity and strong general reasoning should provide the most reliable code generation, debugging, and repository-level understanding among these candidates."
-        },
-        {
-          "rank": 2,
-          "model": "mistralai/mistral-large-4-1t-a52b",
-          "label": "Mistral Large 4",
-          "reason": "Mistral Large 4 is a strong general-purpose coding model with excellent instruction following and broad software knowledge, making it a practical top-tier choice."
-        },
-        {
-          "rank": 3,
-          "model": "poolside/laguna-xs-2.1",
-          "label": "laguna-xs-2.1",
-          "reason": "Poolside's Laguna models are purpose-built for code generation and completion, giving this model a specialized coding advantage despite its smaller size."
-        }
-      ],
-      "raw": "{\"ranking\":[{\"rank\":1,\"model\":\"nvidia/nemotron-3-ultra-550b-a55b\",\"reason\":\"Its very large mixture-of-experts capacity and strong general reasoning should provide the most reliable code generation, debugging, and repository-level understanding among these candidates.\"},{\"rank\":2,\"model\":\"mistralai/mistral-large-4-1t-a52b\",\"reason\":\"Mistral Large 4 is a strong general-purpose coding model with excellent instruction following and broad software knowledge, making it a practical top-tier choice.\"},{\"rank\":3,\"model\":\"poolside/laguna-xs-2.1\",\"reason\":\"Poolside's Laguna models are purpose-built for code generation and completion, giving this model a specialized coding advantage despite its smaller size.\"}]}",
-      "error": ""
+      "top3": [],
+      "raw": "",
+      "error": "no usable answer from the judge model"
     },
     "embedding": {
       "label": "Embedding",
@@ -97,22 +74,9 @@
           "label": "nemotron-3-embed-1b"
         }
       ],
-      "top3": [
-        {
-          "rank": 1,
-          "model": "nvidia/nemotron-3-embed-1b",
-          "label": "nemotron-3-embed-1b",
-          "reason": "A dedicated text embedding model purpose-built for retrieval and semantic similarity, making it the most natural fit for general embedding workloads. Its newer architecture and training lineage suggest stronger representation quality than the multimodal variant."
-        },
-        {
-          "rank": 2,
-          "model": "nvidia/llama-nemotron-embed-vl-1b-v2",
-          "label": "llama-nemotron-embed-vl-1b-v2",
-          "reason": "A strong multimodal embedding model that handles both text and images, offering broad utility when visual inputs matter. For text-only embedding tasks, it is likely less focused than the dedicated text encoder."
-        }
-      ],
-      "raw": "{\"ranking\":[{\"rank\":1,\"model\":\"nvidia/nemotron-3-embed-1b\",\"reason\":\"A dedicated text embedding model purpose-built for retrieval and semantic similarity, making it the most natural fit for general embedding workloads. Its newer architecture and training lineage suggest stronger representation quality than the multimodal variant.\"},{\"rank\":2,\"model\":\"nvidia/llama-nemotron-embed-vl-1b-v2\",\"reason\":\"A strong multimodal embedding model that handles both text and images, offering broad utility when visual inputs matter. For text-only embedding tasks, it is likely less focused than the dedicated text encoder.\"}]}",
-      "error": ""
+      "top3": [],
+      "raw": "",
+      "error": "no usable answer from the judge model"
     }
   }
 }

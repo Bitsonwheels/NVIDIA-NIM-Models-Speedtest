@@ -183,7 +183,7 @@ async function load() {
   if (!emb.length) tEmb.insertAdjacentHTML('beforeend', '<tr><td colspan="3" style="color:var(--muted)">No embedding results yet</td></tr>');
 
   // Skipped / errors
-  const skip = data.filter(d => d.status === 'skipped' || d.status === 'error');
+  const skip = data.filter(d => d.status === 'skipped' || d.status === 'error' || d.status === 'empty');
   const tSkip = document.getElementById('t-skip').querySelector('tbody');
   skip.forEach(r => {
     const tag = r.status === 'skipped' ? '<span class="tag skip">skipped</span>' : '<span class="tag err">error</span>';
